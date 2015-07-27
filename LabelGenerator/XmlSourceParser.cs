@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml;
 using LabelGenerator.Interfaces;
+using LabelGenerator.Objects.SourceParser;
 
-namespace LabelGenerator.Objects.SourceParser
+namespace LabelGenerator
 {
     public class XmlSourceParser : ISourceParser
     {
         private XmlDocument _document;
-        public bool SourceLocation(string location)
+
+        internal bool SourceLocation(string location)
         {
             _document = new XmlDocument();
 
@@ -23,13 +24,18 @@ namespace LabelGenerator.Objects.SourceParser
             catch (Exception)
             {
                 success = false;
+                _document = null;
             }
             
             return success;
         }
 
-        public LabelItem GenerateLabelItem()
+        public LabelItem GenerateLabelItem(string location)
         {
+
+            if (!SourceLocation(location))
+                return null;
+
             if (_document == null)
                 return null;
 

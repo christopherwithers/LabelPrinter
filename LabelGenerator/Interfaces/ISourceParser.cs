@@ -4,8 +4,8 @@ namespace LabelGenerator.Interfaces
 {
     public interface ISourceParser
     {
-        bool SourceLocation(string location);
+        //bool SourceLocation();
 
-        LabelItem GenerateLabelItem();
+        LabelItem GenerateLabelItem(string location);
     }
 }

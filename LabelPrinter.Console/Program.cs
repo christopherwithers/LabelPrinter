@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using LabelGenerator;
 using LabelGenerator.Interfaces;
-using LabelGenerator.Objects.SourceParser;
 
 namespace LabelPrinter.Console
 {
@@ -9,11 +7,13 @@ namespace LabelPrinter.Console
     {
         static void Main(string[] args)
         {
-            ISourceParser sourceParser = new XmlSourceParser();
+            ILabelGenerator sourceParser = new LabelGenerator.LabelGenerator(new XmlSourceParser());
 
-            if (sourceParser.SourceLocation(@"C:\Development\LabelGenerator\Files\Item.xml"))
+            var item = sourceParser.ParseSourceItem(@"C:\Development\LabelPrinterApp\LabelGenerator\Files\Item.xml");
+
+            if (item != null)
             {
-                sourceParser.GenerateLabelItem();
+                var fullLabel = sourceParser.GenerateFullLabel(item);
             }
         }
     }

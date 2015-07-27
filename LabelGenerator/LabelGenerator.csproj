@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -39,10 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\ILabelGenerator.cs" />
     <Compile Include="Interfaces\ISourceParser.cs" />
+    <Compile Include="LabelGenerator.cs" />
     <Compile Include="Objects\SourceParser\LabelItem.cs" />
     <Compile Include="Objects\SourceParser\Section.cs" />
-    <Compile Include="Objects\SourceParser\XmlSourceParser.cs" />
+    <Compile Include="XmlSourceParser.cs" />
     <Compile Include="Objects\SourceParser\Z13.cs" />
     <Compile Include="Objects\SourceParser\Z30.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
