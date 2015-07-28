@@ -39,11 +39,28 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Zen.Barcode.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b5ae55aa76d2d9de, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zen.Barcode.Rendering.Framework.3.1.10729.1\lib\Zen.Barcode.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Zen.Barcode.Design, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b5ae55aa76d2d9de, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zen.Barcode.Rendering.Framework.Web.3.1.10729.1\lib\Zen.Barcode.Design.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Zen.Barcode.Web, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b5ae55aa76d2d9de, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zen.Barcode.Rendering.Framework.Web.3.1.10729.1\lib\Zen.Barcode.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Zen.Barcode.Web.Mvc, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b5ae55aa76d2d9de, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zen.Barcode.Rendering.Framework.Web.3.1.10729.1\lib\Zen.Barcode.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\ILabelGenerator.cs" />
     <Compile Include="Interfaces\ISourceParser.cs" />
     <Compile Include="LabelGenerator.cs" />
+    <Compile Include="Objects\Extensions\GdiHelpers.cs" />
     <Compile Include="Objects\SourceParser\LabelItem.cs" />
     <Compile Include="Objects\SourceParser\Section.cs" />
     <Compile Include="XmlSourceParser.cs" />
@@ -55,6 +72,15 @@
     <Resource Include="Files\Item.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Fonts\ArialUnicodeMS.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Files\Labels.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

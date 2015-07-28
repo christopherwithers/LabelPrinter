@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<labels>
+  <label>
+    <configuration>
+      <backgroundImage></backgroundImage>
+      <width></width>
+      <height></height>
+      <fontFamily></fontFamily>
+      <fontSize></fontSize>
+    </configuration>
+    <fields>
+      <name x="10" y="10"></name>
+    </fields>
+  </label>
+</labels>

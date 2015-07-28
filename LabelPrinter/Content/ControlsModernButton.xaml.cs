@@ -1,21 +1,11 @@
-﻿using FirstFloor.ModernUI.Windows.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Linq;
+using FirstFloor.ModernUI.Windows.Controls;
 
-namespace FirstFloor.ModernUI.App.Content
+namespace LabelPrinter.App.Content
 {
     /// <summary>
     /// Interaction logic for ControlsModernButton.xaml
@@ -45,7 +35,7 @@ namespace FirstFloor.ModernUI.App.Content
 
                         // create a modern button and add it to the button panel
                         ButtonPanel.Children.Add(new ModernButton {
-                            IconData = PathGeometry.Parse(data),
+                            IconData = Geometry.Parse(data),
                             Margin = new Thickness(0, 0, 8, 0)
                         });
                     }
