@@ -32,7 +32,7 @@ namespace LabelGenerator
                 var fontCollection = new PrivateFontCollection();
 
                 fontCollection.AddFontFile(
-                    @"C:\Development\LabelPrinterApp\LabelGenerator\bin\Debug\Fonts\ArialUnicodeMS.ttf");
+                    @"E:\Development\LabelPrinter\LabelGenerator\bin\Debug\Fonts\ArialUnicodeMS.ttf");
 
                 var font10 = new Font(fontCollection.Families[0], 10f, FontStyle.Bold);
                 var font11 = new Font(fontCollection.Families[0], 11f, FontStyle.Bold);
@@ -91,8 +91,7 @@ namespace LabelGenerator
             {
                 var fontCollection = new PrivateFontCollection();
 
-                fontCollection.AddFontFile(
-                    @"C:\Development\LabelPrinterApp\LabelGenerator\bin\Debug\Fonts\ArialUnicodeMS.ttf");
+                fontCollection.AddFontFile(AppDomain.CurrentDomain.BaseDirectory + @"\LabelGenerator\bin\Debug\Fonts\ArialUnicodeMS.ttf");
 
                 var font20 = new Font(fontCollection.Families[0], 20f, FontStyle.Bold);
 

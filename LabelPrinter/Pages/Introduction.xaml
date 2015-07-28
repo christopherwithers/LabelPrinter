@@ -13,7 +13,10 @@
                 <StackPanel.Resources>
                     <PathGeometry x:Key="PrintIcon">F1 M 25,27L 25,17L 51,17L 51,27L 47,27L 47,21L 29,21L 29,27L 25,27 Z M 16,28L 60,28L 60,51L 51,51L 51,60L 25,60L 25,51L 16,51L 16,28 Z M 55,46L 55,33L 21,33L 21,46L 55,46 Z M 25,44L 25,39L 51,39L 51,44L 25,44 Z</PathGeometry>
                 </StackPanel.Resources>
-                <Image Name="ImgLargeLabel" Source="{Binding ElementName=TestWindow, Path=GetImgLargeLabel}" Width="500" Height="300"  />
+                <Border BorderThickness="1"
+        BorderBrush="#FF000000"
+        VerticalAlignment="Top" Width="500" Height="300" >
+                    <Image Name="ImgLargeLabel" Source="{Binding ElementName=TestWindow, Path=GetImgLargeLabel}"  /></Border>
                 <mui:ModernButton Content="" IconData="{StaticResource PrintIcon}" Margin="0,0,0,8" EllipseDiameter="32" IconWidth="20" IconHeight="20" Click="ButtonBase_OnClick" />
                 <Image Name="ImgSpineLabel" Source="{Binding ElementName=TestWindow, Path=GetImgSpineLabel}" Width="300" Height="200"  />
             </StackPanel>

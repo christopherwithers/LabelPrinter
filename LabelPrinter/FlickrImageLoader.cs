@@ -28,8 +28,7 @@ namespace FirstFloor.ModernUI.App
         /// </summary>
         /// <returns></returns>
         public async Task<LinkCollection> GetInterestingnessListAsync()
-        {
-            if (apiKey == null) {
+        {if (apiKey == null) {
                 throw new InvalidOperationException("You need to specify a Flickr API key. Unfortunately the key cannot be distributed with the source code. Get your own from [url=http://www.flickr.com/services/api/misc.api_keys.html]http://www.flickr.com/services/api/misc.api_keys.html[/url].");
             }
 
