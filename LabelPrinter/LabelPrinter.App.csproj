@@ -46,6 +46,10 @@
       <HintPath>..\packages\ModernUI.WPF.1.0.6\lib\net45\FirstFloor.ModernUI.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="LightInject, Version=3.0.2.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LightInject.3.0.2.7\lib\net45\LightInject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Windows.Shell, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Windows.Shell.3.0.1.0\lib\net40\Microsoft.Windows.Shell.dll</HintPath>
       <Private>True</Private>
@@ -122,6 +126,12 @@
       <DependentUpon>DpiAwareness.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\DpiAwarenessViewModel.cs" />
+    <Compile Include="Pages\Printers.xaml.cs">
+      <DependentUpon>Printers.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Labels.xaml.cs">
+      <DependentUpon>Labels.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SampleFormViewModel.cs" />
     <Compile Include="FlickrImageLoader.cs" />
     <Compile Include="LoremIpsumLoader.cs" />
@@ -157,8 +167,8 @@
     <Compile Include="Pages\ControlsStyles.xaml.cs">
       <DependentUpon>ControlsStyles.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Introduction.xaml.cs">
-      <DependentUpon>Introduction.xaml</DependentUpon>
+    <Compile Include="Pages\PrintLabels.xaml.cs">
+      <DependentUpon>PrintLabels.xaml</DependentUpon>
     </Compile>
     <Compile Include="Content\ControlsStylesButton.xaml.cs">
       <DependentUpon>ControlsStylesButton.xaml</DependentUpon>
@@ -396,7 +406,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Introduction.xaml">
+    <Page Include="Pages\Printers.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Labels.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\PrintLabels.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -466,6 +484,10 @@
     <Resource Include="Files\Item.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Extensions\Extensions.csproj">
+      <Project>{DCC8596D-2A57-49C8-A18B-A9E8E3DEAD1D}</Project>
+      <Name>Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LabelGenerator\LabelGenerator.csproj">
       <Project>{450dd86e-d42b-4036-93ba-aea1854a2e1c}</Project>
       <Name>LabelGenerator</Name>

@@ -1,4 +1,5 @@
-﻿using LabelGenerator.Objects.SourceParser;
+﻿using System.Collections.Generic;
+using LabelGenerator.Objects.SourceParser;
 
 namespace LabelGenerator.Interfaces
 {
@@ -7,5 +8,6 @@ namespace LabelGenerator.Interfaces
         //bool SourceLocation();
 
         LabelItem GenerateLabelItem(string location);
+        Dictionary<string, string> GenerateLabelItemDictionary(string location);
     }
 }

@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -45,10 +49,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSystemLabelRepository.cs" />
     <Compile Include="Interfaces\ILabelGenerator.cs" />
+    <Compile Include="Interfaces\ILabelRepository.cs" />
     <Compile Include="Interfaces\ISourceParser.cs" />
-    <Compile Include="LabelGenerator.cs" />
+    <Compile Include="BitmapLabelGenerator.cs" />
     <Compile Include="Objects\Extensions\GdiHelpers.cs" />
+    <Compile Include="Objects\LabelConfig\Label.cs" />
     <Compile Include="Objects\SourceParser\LabelItem.cs" />
     <Compile Include="Objects\SourceParser\Section.cs" />
     <Compile Include="XmlSourceParser.cs" />
@@ -65,10 +72,19 @@
     <EmbeddedResource Include="Fonts\ArialUnicodeMS.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Config\labels.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Files\Labels.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Extensions\Extensions.csproj">
+      <Project>{DCC8596D-2A57-49C8-A18B-A9E8E3DEAD1D}</Project>
+      <Name>Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

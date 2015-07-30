@@ -1,0 +1,74 @@
+[
+  {
+    "Name": "SpineLabel",
+    "FriendlyName": "Spine Label",
+    "Printer": null,
+    "Width": 500,
+    "Height": 300,
+    "Content": [
+      {
+        "Type": 0,
+        "X": "10",
+        "Y": "10",
+        "Width": 0,
+        "Height": 0,
+        "Text": "University of Birmingham",
+        "Font": "ArialUnicode-11f"
+      }
+    ],
+    "Fonts": [
+      {
+        "Name": "ArialUnicode-10f",
+        "FontFamily": "Arial Unicode MS",
+        "Custom": true,
+        "Location": "ArialUnicodeMS.ttf",
+        "Size": 10.0,
+        "Style": 1
+      },
+      {
+        "Name": "ArialUnicode-11f",
+        "FontFamily": "Arial Unicode MS",
+        "Custom": true,
+        "Location": "ArialUnicodeMS.ttf",
+        "Size": 11.0,
+        "Style": 1
+      }
+    ]
+  },
+  {
+    "Name": "FullLabel",
+    "FriendlyName": "Full Label",
+    "Printer": "KROY K4452",
+    "Width": 500,
+    "Height": 300,
+    "Content": [
+      {
+        "Type": 0,
+        "X": "10",
+        "Y": "10",
+        "Width": 0,
+        "Height": 0,
+        "Text": "University of Birmingham",
+        "Font": "ArialUnicode-11f"
+      }
+    ],
+    "Fonts": [
+      {
+        "Name": "ArialUnicode-10f",
+        "FontFamily": "Arial Unicode MS",
+        "Custom": true,
+        "Location": "ArialUnicodeMS.ttf",
+        "Size": 10.0,
+        "Style": 1
+      },
+      {
+        "Name": "ArialUnicode-11f",
+        "FontFamily": "Arial Unicode MS",
+        "Custom": true,
+        "Location": "ArialUnicodeMS.ttf",
+        "Size": 11.0,
+        "Style": 1
+      }
+    ]
+  }
+]

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Windows.Xps.Packaging;
-using LabelGenerator;
 using LabelGenerator.Interfaces;
 using LabelGenerator.Objects.SourceParser;
 using LabelPrinter.App.Extensions;
@@ -15,10 +15,10 @@ namespace LabelPrinter.App.Pages
     /// <summary>
     /// Interaction logic for Introduction.xaml
     /// </summary>
-    public partial class Introduction : UserControl
+    public partial class PrintLabels : UserControl
     {
         private readonly string _imageLocation;
-        private readonly ILabelGenerator _sourceParser;
+        private readonly ILabelGenerator _labelGenerator;
         private readonly LabelItem _labelItem;
 
         public BitmapImage GetImgLargeLabel
@@ -31,15 +31,16 @@ namespace LabelPrinter.App.Pages
             get { return GetSpineLabel(); }
         }
 
-        public Introduction()
+        public PrintLabels()
         {
-            _sourceParser = new LabelGenerator.LabelGenerator(new XmlSourceParser());
-                        var args = Environment.GetCommandLineArgs();
+            _labelGenerator = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelGenerator>();
+            
+            var args = Environment.GetCommandLineArgs();
 
             _imageLocation = args[1];
 
-            if (_sourceParser != null)
-                _labelItem = _sourceParser.ParseSourceItem(_imageLocation);
+            if (_labelGenerator != null)
+                _labelItem = _labelGenerator.ParseSourceItem(_imageLocation);
 
             InitializeComponent();
         }
@@ -50,7 +51,7 @@ namespace LabelPrinter.App.Pages
             {
                 if (_labelItem != null)
                 {
-                    var fullLabel = _sourceParser.GenerateFullLabel(_labelItem);
+                    var fullLabel = _labelGenerator.GenerateFullLabel(_labelItem);
 
                     if (fullLabel != null)
                     {
@@ -68,7 +69,7 @@ namespace LabelPrinter.App.Pages
             {
                 if (_labelItem != null)
                 {
-                    var fullLabel = _sourceParser.GenerateSpineLabel(_labelItem);
+                    var fullLabel = _labelGenerator.GenerateSpineLabel(_labelItem);
 
                     if (fullLabel != null)
                     {
@@ -122,7 +123,7 @@ namespace LabelPrinter.App.Pages
 
             //############################
             //Working:
-            PrintDialog dlg = new PrintDialog();
+          /*  PrintDialog dlg = new PrintDialog();
             bool? result = dlg.ShowDialog();
 
             if (result.HasValue && result.Value)
@@ -131,8 +132,27 @@ namespace LabelPrinter.App.Pages
                 ImgLargeLabel.Arrange(new Rect(new Point(0, 0), ImgLargeLabel.DesiredSize));
 
                 dlg.PrintVisual(ImgLargeLabel, "Print a Large Image");
+            }*/
+
+            var dlg = new PrintDialog();
+
+            var result = dlg.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+             //   ImgLargeLabel.Measure(new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight));
+               // ImgLargeLabel.Arrange(new Rect(new Point(0, 0), ImgLargeLabel.DesiredSize));
+
+              //  dlg.PrintVisual(ImgLargeLabel, "Print a Large Image");
+
+             //   var someVar = dlg.PrintQueue.FullName;
+
+                MessageBox.Show(dlg.PrintQueue.FullName);
             }
 
+           // printDialog.PrintQueue = new PrintQueue(new PrintServer(), "PrinterName");
+            
+            //printDialog.PrintDocument(document, "PrintDocument");
             //######################################
         }
 

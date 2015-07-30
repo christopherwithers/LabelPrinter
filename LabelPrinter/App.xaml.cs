@@ -1,12 +1,6 @@
-﻿using FirstFloor.ModernUI.Presentation;
-using FirstFloor.ModernUI.Windows.Controls;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using LabelGenerator;
+using LabelGenerator.Interfaces;
 
 namespace FirstFloor.ModernUI.App
 {
@@ -15,12 +9,17 @@ namespace FirstFloor.ModernUI.App
     /// </summary>
     public partial class App : Application
     {
+        public static LightInject.ServiceContainer Container = new LightInject.ServiceContainer();
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Application.Startup"/> event.
         /// </summary>
         /// <param name="e">A <see cref="T:System.Windows.StartupEventArgs"/> that contains the event data.</param>
         protected override void OnStartup(StartupEventArgs e)
         {
+            Container.Register<ISourceParser, XmlSourceParser>();
+            Container.Register<ILabelGenerator, BitmapLabelGenerator>();
+            Container.Register<ILabelRepository, FileSystemLabelRepository>();
+
             base.OnStartup(e);
         }
     }

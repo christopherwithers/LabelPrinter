@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
 using System.Xml;
+using System.Xml.Linq;
+using Extensions;
 using LabelGenerator.Interfaces;
 using LabelGenerator.Objects.SourceParser;
 
@@ -11,36 +16,45 @@ namespace LabelGenerator
     {
         private XmlDocument _document;
 
+        //todo: should we refactor this to an IDocument manager?? Or just stub out for unit testing??
         internal bool SourceLocation(string location)
         {
-            _document = new XmlDocument();
-
             var success = true;
 
             try
             {
-                _document.Load(location);
+                using (var r = new StreamReader(location))
+                {
+                    string currentLine;
+                    var xmlDoc = new StringBuilder();
+                    while ((currentLine = r.ReadLine()) != null)
+                        xmlDoc.Append(currentLine.Trim());
+
+                    _document = new XmlDocument();
+                    _document.LoadXml(xmlDoc.ToString());
+                }
             }
             catch (Exception)
             {
                 success = false;
                 _document = null;
             }
-            
+
             return success;
         }
 
         public LabelItem GenerateLabelItem(string location)
         {
-
             if (!SourceLocation(location))
                 return null;
 
             if (_document == null)
                 return null;
 
-            if (_document.DocumentElement == null) 
+            if (_document.DocumentElement == null)
                 return null;
+
+            GenerateLabelItemDictionary(location);
 
 
             var labelItem = new LabelItem
@@ -58,11 +72,53 @@ namespace LabelGenerator
             return labelItem;
         }
 
+        public Dictionary<string, string> GenerateLabelItemDictionary(string location)
+        {
+            if (!SourceLocation(location))
+                return null;
+
+            if (_document == null)
+                return null;
+
+            if (_document.DocumentElement == null)
+                return null;
+
+            var xDoc = _document.ToXDocument();
+
+            if (xDoc.Root == null)
+                return null;
+
+            var outputDict = new Dictionary<string, string>();
+
+            foreach (var element in xDoc.Root.Elements())
+            {
+                RecParseXDoc(element, outputDict);
+            }
+
+
+            return outputDict;
+        }
+
+        //parse down
+        private static void RecParseXDoc(XElement element, Dictionary<string, string> xDict)
+        {
+            if (element.HasElements)
+            {
+                foreach (var childElement in element.Elements())
+                {
+                    RecParseXDoc(childElement, xDict);
+                }
+
+            }
+            //   else
+            xDict.Add(element.Name.ToString(), element.Value);
+        }
+
         private static Collection<Section> ParseSections(IEnumerable nodeList)
         {
             var sections = new Collection<Section>();
 
-            if (nodeList == null) 
+            if (nodeList == null)
                 return sections;
 
             foreach (XmlNode node in nodeList)
@@ -142,7 +198,7 @@ namespace LabelGenerator
 
         private static string ParseXmlNode(XmlNode node, string name)
         {
-            if(node == null)
+            if (node == null)
                 return string.Empty;
 
             var parseNode = node.SelectSingleNode(name);
