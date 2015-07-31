@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,7 +7,6 @@ using Extensions;
 using LabelGenerator.Interfaces;
 using LabelGenerator.Objects.LabelConfig;
 using Newtonsoft.Json;
-using Formatting = System.Xml.Formatting;
 
 namespace LabelGenerator
 {
@@ -21,7 +19,7 @@ namespace LabelGenerator
             if (_labels == null)
                 LoadLabels();
 
-            return _labels.FirstOrDefault(n => n.Name == name);
+            return _labels?.FirstOrDefault(n => n.Name == name);
         }
 
         public IEnumerable<Label> FetchAllLabels()
@@ -64,7 +62,7 @@ namespace LabelGenerator
             var success = true;
             try
             {
-                File.WriteAllText(@"C:\Development\LabelPrinter\LabelGenerator\Config\labels.json", JsonConvert.SerializeObject(labels, Newtonsoft.Json.Formatting.Indented));
+                File.WriteAllText(@"C:\Development\LabelPrinter\LabelGenerator\Config\labels.json", JsonConvert.SerializeObject(labels, Formatting.Indented));
             }
             catch (Exception)
             {

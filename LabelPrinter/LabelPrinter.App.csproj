@@ -82,6 +82,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BingImage.cs" />
+    <Compile Include="Code\CustomControls\ZoomBorder.cs" />
     <Compile Include="Code\Extensions\WpfHelpers.cs" />
     <Compile Include="Content\ContentLoaderImages.xaml.cs">
       <DependentUpon>ContentLoaderImages.xaml</DependentUpon>

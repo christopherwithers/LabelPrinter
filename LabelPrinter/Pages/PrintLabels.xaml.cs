@@ -21,15 +21,9 @@ namespace LabelPrinter.App.Pages
         private readonly ILabelGenerator _labelGenerator;
         private readonly LabelItem _labelItem;
 
-        public BitmapImage GetImgLargeLabel
-        {
-            get { return GetLargeLabel(); }
-        }
+        public BitmapImage GetImgLargeLabel => GetLargeLabel();
 
-        public BitmapImage GetImgSpineLabel
-        {
-            get { return GetSpineLabel(); }
-        }
+        public BitmapImage GetImgSpineLabel => GetSpineLabel();
 
         public PrintLabels()
         {
@@ -41,6 +35,8 @@ namespace LabelPrinter.App.Pages
 
             if (_labelGenerator != null)
                 _labelItem = _labelGenerator.ParseSourceItem(_imageLocation);
+
+            _labelGenerator.ParseSourceItemAsDictionary(_imageLocation);
 
             InitializeComponent();
         }
@@ -204,7 +200,7 @@ namespace LabelPrinter.App.Pages
 
                         //dv1
 
-                        preview.ShowDialog();
+                        preview?.ShowDialog();
                     }
                 }
             }

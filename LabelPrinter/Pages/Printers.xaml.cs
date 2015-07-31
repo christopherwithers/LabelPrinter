@@ -38,8 +38,8 @@ namespace LabelPrinter.App.Pages
 
             _imageLocation = args[1];
 
-            if (_labelGenerator != null)
-                _labelItem = _labelGenerator.ParseSourceItem(_imageLocation);
+          //  if (_labelGenerator != null)
+              //  _labelItem = _labelGenerator.ParseSourceItem(_imageLocation);
 
             InitializeComponent();
         }

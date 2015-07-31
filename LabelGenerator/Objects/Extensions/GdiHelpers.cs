@@ -11,9 +11,9 @@ namespace LabelGenerator.Objects.Extensions
             return (containerWidth - s.Width) / 2;
         }
 
-        public static float XCenter(this Image image, float containerWidth)
+        /*public static float XCenter(this Image image, float containerWidth)
         {
             return (containerWidth - image.Width) / 2;
-        }
+        }*/
     }
 }

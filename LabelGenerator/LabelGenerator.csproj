@@ -78,9 +78,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Files\Labels.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Extensions\Extensions.csproj">
       <Project>{DCC8596D-2A57-49C8-A18B-A9E8E3DEAD1D}</Project>
       <Name>Extensions</Name>

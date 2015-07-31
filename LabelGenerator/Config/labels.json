@@ -2,18 +2,107 @@
   {
     "Name": "FullLabel",
     "FriendlyName": "Full Label",
-    "Printer": "Fax",
+    "Printer": "\\\\MDS-print-02\\MDS-HUB-WG43-Mono",
     "Width": 500,
     "Height": 300,
     "Content": [
       {
         "Type": 0,
-        "X": "10",
+        "X": "Center",
         "Y": "10",
-        "Width": 0,
-        "Height": 0,
         "Text": "University of Birmingham",
         "Font": "ArialUnicode-11f"
+      },
+      {
+        "Type": 0,
+        "X": "Center",
+        "Y": "40",
+        "Text": "Library Services",
+        "Font": "ArialUnicode-11f"
+      },
+      {
+        "Type": 0,
+        "X": "Center",
+        "Y": "60",
+        "Text": "#z30-sub-library#",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "20",
+        "Y": "75",
+        "Text": "#z13-author#",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "20",
+        "Y": "90",
+        "Text": "#z13-title#",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "20",
+        "Y": "105",
+        "Text": "#z13-year#",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "20",
+        "Y": "115",
+        "Text": "#z13-isbn-issn#",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "20",
+        "Y": "135",
+        "Text": "Shelfmark:",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "120",
+        "Y": "135",
+        "Text": "#z30-call-no#",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "20",
+        "Y": "150",
+        "Text": "Barcode:",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "120",
+        "Y": "150",
+        "Text": "#z30-barcode#",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "20",
+        "Y": "165",
+        "Text": "System No:",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 0,
+        "X": "120",
+        "Y": "165",
+        "Text": "#z13-doc-number#",
+        "Font": "ArialUnicode-10f"
+      },
+      {
+        "Type": 1,
+        "X": "10",
+        "Y": "10",
+        "Width": 480,
+        "Height": 280
       }
     ],
     "Fonts": [
@@ -38,7 +127,7 @@
   {
     "Name": "SpineLabel",
     "FriendlyName": "Spine Label",
-    "Printer": "\\\\MDS-print-02\\MDS-HUB-WG43-Mono",
+    "Printer": "Fax",
     "Width": 500,
     "Height": 300,
     "Content": [

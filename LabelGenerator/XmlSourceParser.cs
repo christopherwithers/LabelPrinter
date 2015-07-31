@@ -48,10 +48,7 @@ namespace LabelGenerator
             if (!SourceLocation(location))
                 return null;
 
-            if (_document == null)
-                return null;
-
-            if (_document.DocumentElement == null)
+            if (_document?.DocumentElement == null)
                 return null;
 
             GenerateLabelItemDictionary(location);
@@ -77,10 +74,7 @@ namespace LabelGenerator
             if (!SourceLocation(location))
                 return null;
 
-            if (_document == null)
-                return null;
-
-            if (_document.DocumentElement == null)
+            if (_document?.DocumentElement == null)
                 return null;
 
             var xDoc = _document.ToXDocument();
@@ -99,8 +93,7 @@ namespace LabelGenerator
             return outputDict;
         }
 
-        //parse down
-        private static void RecParseXDoc(XElement element, Dictionary<string, string> xDict)
+        private static void RecParseXDoc(XElement element, IDictionary<string, string> xDict)
         {
             if (element.HasElements)
             {
@@ -110,7 +103,6 @@ namespace LabelGenerator
                 }
 
             }
-            //   else
             xDict.Add(element.Name.ToString(), element.Value);
         }
 
@@ -198,10 +190,7 @@ namespace LabelGenerator
 
         private static string ParseXmlNode(XmlNode node, string name)
         {
-            if (node == null)
-                return string.Empty;
-
-            var parseNode = node.SelectSingleNode(name);
+            var parseNode = node?.SelectSingleNode(name);
 
             if (parseNode == null)
                 return string.Empty;

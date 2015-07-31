@@ -18,6 +18,8 @@ namespace LabelGenerator
     {
         private readonly ISourceParser _sourceParser;
         private readonly ILabelRepository _labelRepository;
+
+        private Dictionary<string, string> _sourceItemDict; 
  
         public BitmapLabelGenerator(ISourceParser sourceParser, ILabelRepository labelRepository)
         {
@@ -47,7 +49,7 @@ namespace LabelGenerator
 
         public Dictionary<string, string> ParseSourceItemAsDictionary(string location)
         {
-            throw new NotImplementedException();
+            return _sourceItemDict = _sourceParser.GenerateLabelItemDictionary(location);
         }
 
         public void LoadConfiguredLabels()
@@ -55,17 +57,41 @@ namespace LabelGenerator
 
         }
 
+        private string ParseLabelText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
+            if (text.StartsWith("#") && text.EndsWith("#"))
+            {
+                string dictValue;
+                var checkVal = text.Replace("#", "");
+                if (_sourceItemDict.TryGetValue(checkVal.ToLower(), out dictValue))
+                    return dictValue;
+            }
+
+            return text;
+        }
+
+        private static float ParseCoord(string text = "", string coord = "", Graphics graphics = null, Font font = null, float size = 0f)
+        {
+            if (string.IsNullOrEmpty(coord))
+                return 0;
+
+            if (coord.ToLower() == "center")
+                return text.XCenter(graphics, font, size);
+
+            return Convert.ToSingle(coord);
+        }
+
         private Bitmap GenerateLabelTest()
         {
           //  LoadJson();
-            var Label = new Label { Name = "FullLabel", Width = 500, Height = 300 };
+            var label = _labelRepository.FetchAllLabels().First();//new Label { Name = "FullLabel", Width = 500, Height = 300 };
 
-            Label.Content.Add(new DisplayLine { Type = Type.String, X = "10", Y = "10", Text = "University of Birmingham", Font = "ArialUnicode-11f" });
+           // Label.Content.Add(new DisplayLine { Type = Type.String, X = "10", Y = "10", Text = "University of Birmingham", Font = "ArialUnicode-11f" });
 
-            Label.Fonts.Add(new FontConfig { Custom = true, Location = "ArialUnicodeMS.ttf", FontFamily = "Arial Unicode MS", Name = "ArialUnicode-10f", Size = 10f, Style = FontStyle.Bold });
-            Label.Fonts.Add(new FontConfig { Custom = true, Location = "ArialUnicodeMS.ttf", FontFamily = "Arial Unicode MS", Name = "ArialUnicode-11f", Size = 11f, Style = FontStyle.Bold });
-
-            
+            //Label.Fonts.Add(new FontConfig { Custom = true, Location = "ArialUnicodeMS.ttf", FontFamily = "Arial Unicode MS", Name = "ArialUnicode-10f", Size = 10f, Style = FontStyle.Bold });
 
            // var collectionss = new Collection<Label>();
            // collectionss.Add(Label);
@@ -76,15 +102,15 @@ namespace LabelGenerator
             //var blah = test.FromJson<Label>();
 
 
-            if (Label != null)
+            if (label != null)
             {
-                var imageSize = new Point(Label.Width, Label.Height);
+                var imageSize = new Point(label.Width, label.Height);
                 using (var labelImage = new Bitmap(imageSize.X, imageSize.Y))
                 using (var graphics = Graphics.FromImage(labelImage))
                 {
                     var fontCollection = new PrivateFontCollection();
 
-                    var customFonts = Label.Fonts.Where(n => n.Custom).Select(n => n.Location).Distinct();
+                    var customFonts = label.Fonts.Where(n => n.Custom).Select(n => n.Location).Distinct();
 
                     if (customFonts.HasContent())
                     {
@@ -96,7 +122,7 @@ namespace LabelGenerator
 
                     var fontDict = new Dictionary<string, Font>();
 
-                    foreach (var font in Label.Fonts)
+                    foreach (var font in label.Fonts)
                     {
                         if (font.Custom)
                             fontDict.Add(font.Name, new Font(fontCollection.Families.Single(n => n.Name == font.FontFamily), font.Size, font.Style));
@@ -109,20 +135,24 @@ namespace LabelGenerator
                     graphics.SmoothingMode = SmoothingMode.HighQuality;
                     graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                    graphics.PageUnit = GraphicsUnit.Millimeter;
+                    graphics.PageUnit = GraphicsUnit.Pixel;
                     var sb1 = new SolidBrush(Color.Black);
 
-                    if (Label.Content.HasContent())
+                    if (label.Content.HasContent())
                     {
-                        foreach (var line in Label.Content)
+                        foreach (var line in label.Content)
                         {
                             switch (line.Type)
                             {
                                 case Type.String:
-                                    graphics.DrawString(line.Text, fontDict[line.Font], sb1,
-                                        new Point(Convert.ToInt32(line.X), Convert.ToInt32(line.Y)));
+                                    var text = ParseLabelText(line.Text);
+                                    graphics.DrawString(text, fontDict[line.Font], sb1,
+                                        new PointF(ParseCoord(text, line.X, graphics, fontDict[line.Font], imageSize.X), 
+                                                   ParseCoord(text, line.Y, graphics, fontDict[line.Font], imageSize.Y)));
                                     break;
-
+                                    case Type.Rectangle:
+                                        graphics.DrawRectangle(new Pen(Color.Black), ParseCoord(coord: line.X), ParseCoord(coord: line.Y), line.Width, line.Height);
+                                    break;
                                 default:
                                     break;
                             }
@@ -189,7 +219,7 @@ namespace LabelGenerator
 
         public Bitmap GenerateFullLabel(LabelItem item)
         {
-           // return GenerateLabelTest();
+            return GenerateLabelTest();
             var imageSize = new Point(500, 300);
             using (var labelImage = new Bitmap(imageSize.X, imageSize.Y))
             using (var graphics = Graphics.FromImage(labelImage))
@@ -240,8 +270,8 @@ namespace LabelGenerator
                 var bc = tst.Draw(item.Sections[0].Z30.BarCode, 50);
 
 
-                if (bc != null)
-                    graphics.DrawImage(bc, new PointF(bc.XCenter(imageSize.X), 150));
+           //     if (bc != null)
+               //     graphics.DrawImage(bc, new PointF(bc.XCenter(imageSize.X), 150));
 
                 return new Bitmap(labelImage);
             }
