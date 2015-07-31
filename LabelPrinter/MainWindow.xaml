@@ -16,8 +16,8 @@
         <mui:LinkGroup DisplayName="Labels">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="Build Labels" Source="/Pages/PrintLabels.xaml" />
-                <mui:Link DisplayName="Labels" Source="/Pages/Labels.xaml" />
-                <mui:Link DisplayName="Printers" Source="/Pages/Printers.xaml" />
+                <mui:Link DisplayName="Edit Labels" Source="/Pages/Labels.xaml" />
+                <!--<mui:Link DisplayName="Printers" Source="/Pages/Printers.xaml" />-->
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
         <!--<mui:LinkGroup DisplayName="Layout">

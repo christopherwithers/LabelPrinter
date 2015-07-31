@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,12 +32,17 @@ namespace LabelPrinter.App.Pages
             
             var args = Environment.GetCommandLineArgs();
 
-            _imageLocation = args[1];
+            _imageLocation = args.SingleOrDefault(n => n.Contains("c:/"));
+            //_imageLocation = args[1] ?? null;
 
-            if (_labelGenerator != null)
-                _labelItem = _labelGenerator.ParseSourceItem(_imageLocation);
+            //if (_labelGenerator != null)
 
-            _labelGenerator.ParseSourceItemAsDictionary(_imageLocation);
+            if (_imageLocation == null)
+                ErrorMessage(true);
+
+                _labelItem = _labelGenerator?.ParseSourceItem(_imageLocation);
+
+            _labelGenerator?.ParseSourceItemAsDictionary(_imageLocation);
 
             InitializeComponent();
         }
@@ -77,6 +83,14 @@ namespace LabelPrinter.App.Pages
             return new BitmapImage();
         }
 
+
+        private void ErrorMessage(bool isError, string errorMessage = "")
+        {
+            if (isError)
+            {
+                SpLabels.Children.Add(new Label {Content = "Error!"});
+            }
+        }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {

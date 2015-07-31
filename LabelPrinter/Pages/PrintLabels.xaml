@@ -8,7 +8,7 @@
              mc:Ignorable="d"
              x:Name="TestWindow"
              d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <Grid>
+   <!-- <Grid>
 
 
         <ScrollViewer>
@@ -24,6 +24,21 @@
             </StackPanel>
         </ScrollViewer>
         
-    </Grid>
-    
+    </Grid>-->
+    <ScrollViewer>
+        <StackPanel MinWidth="200" Name="SpMain">
+            <StackPanel.Resources>
+                <PathGeometry x:Key="PrintIcon">F1 M 25,27L 25,17L 51,17L 51,27L 47,27L 47,21L 29,21L 29,27L 25,27 Z M 16,28L 60,28L 60,51L 51,51L 51,60L 25,60L 25,51L 16,51L 16,28 Z M 55,46L 55,33L 21,33L 21,46L 55,46 Z M 25,44L 25,39L 51,39L 51,44L 25,44 Z</PathGeometry>
+            </StackPanel.Resources>
+            <TextBlock Text="Label Configuration" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
+            <mui:BBCodeBlock BBCode="This page allows labels to be configured." Margin="0,0,0,16"/>
+
+            <StackPanel Name="SpLabels">
+
+            </StackPanel>
+
+        </StackPanel>
+
+    </ScrollViewer>
+
 </UserControl>
