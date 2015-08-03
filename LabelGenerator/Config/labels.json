@@ -1,6 +1,6 @@
 [
   {
-    "Name": "FullLabel",
+    "TemplateName": "FullLabel",
     "FriendlyName": "Full Label",
     "Printer": "\\\\MDS-print-02\\MDS-HUB-WG43-Mono",
     "Width": 500,

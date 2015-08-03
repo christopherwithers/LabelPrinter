@@ -5,14 +5,14 @@ namespace LabelGenerator.Objects.LabelConfig
 {
     public enum Type { String, Rectangle }
 
-    public class Label
+    public class LabelTemplate
     {
-        public Label()
+        public LabelTemplate()
         {
             Content = new Collection<DisplayLine>();
             Fonts = new Collection<FontConfig>();
         }
-
+        public string TemplateName { get; set; }
         public string Name { get; set; }
         public string FriendlyName { get; set; }
 

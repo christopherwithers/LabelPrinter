@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Xps.Packaging;
+using FirstFloor.ModernUI.Windows.Controls;
 using LabelGenerator.Interfaces;
-using LabelGenerator.Objects.SourceParser;
 using LabelPrinter.App.Extensions;
 
 namespace LabelPrinter.App.Pages
@@ -18,78 +17,72 @@ namespace LabelPrinter.App.Pages
     /// </summary>
     public partial class PrintLabels : UserControl
     {
-        private readonly string _imageLocation;
-        private readonly ILabelGenerator _labelGenerator;
-        private readonly LabelItem _labelItem;
+        private readonly string _labelLocation;
+        private readonly ILabelTemplateManager _labelTemplateManager;
+        private readonly ILabelManager _labelManager;
+        private readonly IBitmapGenerator _bitmapGenerator;
 
-        public BitmapImage GetImgLargeLabel => GetLargeLabel();
-
-        public BitmapImage GetImgSpineLabel => GetSpineLabel();
+        private readonly Dictionary<string, string> _labelItem;
 
         public PrintLabels()
         {
-            _labelGenerator = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelGenerator>();
-            
-            var args = Environment.GetCommandLineArgs();
+            _labelTemplateManager = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelTemplateManager>();
+            _labelManager = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelManager>();
+            _bitmapGenerator = FirstFloor.ModernUI.App.App.Container.GetInstance<IBitmapGenerator>();
 
-            _imageLocation = args.SingleOrDefault(n => n.Contains("c:/"));
-            //_imageLocation = args[1] ?? null;
+            _labelLocation = new CommandLineArgs()["location"];
 
-            //if (_labelGenerator != null)
-
-            if (_imageLocation == null)
+            if (_labelLocation == null)
                 ErrorMessage(true);
 
-                _labelItem = _labelGenerator?.ParseSourceItem(_imageLocation);
-
-            _labelGenerator?.ParseSourceItemAsDictionary(_imageLocation);
+                _labelItem = _labelManager?.ParseLabelFromFile(_labelLocation);
 
             InitializeComponent();
+
+            GenerateFormItems();
         }
 
-        private BitmapImage GetLargeLabel()
+
+        private void GenerateFormItems()
         {
-            if (!string.IsNullOrEmpty(_imageLocation))
+            if (!string.IsNullOrEmpty(_labelLocation))
             {
                 if (_labelItem != null)
                 {
-                    var fullLabel = _labelGenerator.GenerateFullLabel(_labelItem);
-
-                    if (fullLabel != null)
+                    foreach (var template in _labelTemplateManager.FetchAllLabelTemplates())
                     {
-                        return fullLabel.ToBitmapImage();
+                        var fullLabel = _bitmapGenerator?.GenerateLabel(_labelItem, template);
+
+                        if (fullLabel != null)
+                        {
+                            var stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
+                            stackPanel.Children.Add(new TextBlock {Text = "Label Name", Style = (Style)FindResource("Heading2") });
+                            SpLabels.Children.Add(stackPanel);
+
+                            stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+                            stackPanel.Children.Add(new Image {Source = fullLabel.Bitmap.ToBitmapImage()});
+                            var printLabelButton = new ModernButton {Name = "Labelname", IconData = (Geometry) SpMain.Resources["PrintIcon"]};
+                            printLabelButton.Click += PrintLabelButtonOnClick;
+                            stackPanel.Children.Add(printLabelButton);
+                            SpLabels.Children.Add(stackPanel);
+
+                        }
                     }
                 }
             }
-
-            return new BitmapImage();
         }
 
-        private BitmapImage GetSpineLabel()
+        private static void PrintLabelButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            if (!string.IsNullOrEmpty(_imageLocation))
-            {
-                if (_labelItem != null)
-                {
-                    var fullLabel = _labelGenerator.GenerateSpineLabel(_labelItem);
-
-                    if (fullLabel != null)
-                    {
-                        return fullLabel.ToBitmapImage();
-                    }
-                }
-            }
-
-            return new BitmapImage();
+            MessageBox.Show(((ModernButton) sender).Name);
         }
-
 
         private void ErrorMessage(bool isError, string errorMessage = "")
         {
-            if (isError)
+         /*   if (isError)
             {
                 SpLabels.Children.Add(new Label {Content = "Error!"});
-            }
+            }*/
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -165,83 +158,5 @@ namespace LabelPrinter.App.Pages
             //printDialog.PrintDocument(document, "PrintDocument");
             //######################################
         }
-
-
-        //##################
-
-        private string _previewWindowXaml =
-    @"<Window
-        xmlns                 ='http://schemas.microsoft.com/netfx/2007/xaml/presentation'
-        xmlns:x               ='http://schemas.microsoft.com/winfx/2006/xaml'
-        Title                 ='Print Preview - @@TITLE'
-        Height                ='200'
-        Width                 ='300'
-        WindowStartupLocation ='CenterOwner'>
-        <DocumentViewer Name='dv1'/>
-
-     </Window>";
-
-        internal void DoPreview(string title)
-        {
-            string fileName = System.IO.Path.GetRandomFileName();
-            FlowDocumentScrollViewer visual = new FlowDocumentScrollViewer();// (FlowDocumentScrollViewer)(_parent.FindName("fdsv1"));
-            try
-            {
-                // write the XPS document
-                using (var doc = new XpsDocument(fileName, FileAccess.ReadWrite))
-                {
-                    var writer = XpsDocument.CreateXpsDocumentWriter(doc);
-                    writer.Write(visual);
-                }
-
-                // Read the XPS document into a dynamically generated
-                // preview Window 
-                using (XpsDocument doc = new XpsDocument(fileName, FileAccess.Read))
-                {
-                    FixedDocumentSequence fds = doc.GetFixedDocumentSequence();
-
-
-
-                    string s = _previewWindowXaml;
-                    s = s.Replace("@@TITLE", title.Replace("'", "&apos;"));
-
-                    using (var reader = new System.Xml.XmlTextReader(new StringReader(s)))
-                    {
-                        Window preview = System.Windows.Markup.XamlReader.Load(reader) as Window;
-
-                       // DocumentViewer dv1 = LogicalTreeHelper.FindLogicalNode(preview, "dv1") as DocumentViewer;
-                      //  dv1.Document = fds as IDocumentPaginatorSource;
-
-                        //dv1
-
-                        preview?.ShowDialog();
-                    }
-                }
-            }
-            finally
-            {
-               /* if (File.Exists(fileName))
-                {
-                    try
-                    {
-                        File.Delete(fileName);
-                    }
-                    catch
-                    {
-                    }
-                }*/
-            }
-        } 
-
-        //##################
-
-
-
-
-
-
-
-
-
     }
 }

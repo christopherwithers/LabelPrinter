@@ -49,13 +49,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitmapGenerator.cs" />
     <Compile Include="FileSystemLabelRepository.cs" />
-    <Compile Include="Interfaces\ILabelGenerator.cs" />
+    <Compile Include="Interfaces\IBitmapGenerator.cs" />
+    <Compile Include="Interfaces\ILabelManager.cs" />
+    <Compile Include="Interfaces\ILabelTemplateManager.cs" />
     <Compile Include="Interfaces\ILabelRepository.cs" />
     <Compile Include="Interfaces\ISourceParser.cs" />
-    <Compile Include="BitmapLabelGenerator.cs" />
+    <Compile Include="LabelManager.cs" />
+    <Compile Include="LabelTemplateManager.cs" />
+    <Compile Include="Objects\BitmapGenerator\LabelBitmap.cs" />
     <Compile Include="Objects\Extensions\GdiHelpers.cs" />
-    <Compile Include="Objects\LabelConfig\Label.cs" />
+    <Compile Include="Objects\LabelConfig\LabelTemplate.cs" />
     <Compile Include="Objects\SourceParser\LabelItem.cs" />
     <Compile Include="Objects\SourceParser\Section.cs" />
     <Compile Include="XmlSourceParser.cs" />

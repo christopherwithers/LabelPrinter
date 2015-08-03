@@ -23,16 +23,16 @@ namespace LabelPrinter.App.Pages
     /// </summary>
     public partial class Labels : UserControl
     {
-        private readonly ILabelGenerator _labelGenerator;
+        private readonly ILabelTemplateManager _labelGenerator;
 
-        private IEnumerable<LabelGenerator.Objects.LabelConfig.Label> _labels;
+        private IEnumerable<LabelGenerator.Objects.LabelConfig.LabelTemplate> _labels;
 
 
         public Labels()
         {
             InitializeComponent();
 
-            _labelGenerator = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelGenerator>();
+            _labelGenerator = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelTemplateManager>();
 
             if (_labelGenerator != null)
                 GenerateFormItems();
@@ -43,7 +43,7 @@ namespace LabelPrinter.App.Pages
         {
             if (_labels == null)
             {
-                _labels = _labelGenerator.FetchAllLabels();
+                _labels = _labelGenerator.FetchAllLabelTemplates();
             }
 
             if (_labels.HasContent())
@@ -94,7 +94,7 @@ namespace LabelPrinter.App.Pages
 
         private void PrintConfigButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            var source = (ModernButton) sender;
+           /* var source = (ModernButton) sender;
 
             if (source != null)
             {
@@ -111,11 +111,11 @@ namespace LabelPrinter.App.Pages
                     {
                         label.Printer = dlg.PrintQueue.FullName;
 
-                        if (!_labelGenerator.SaveLabel(label))
+                        if (!_labelGenerator.SaveLabelTemplate(label))
                             MessageBox.Show("Couldn't save!");
                     }
                 }
-            }
+            }*/
         }
     }
 }

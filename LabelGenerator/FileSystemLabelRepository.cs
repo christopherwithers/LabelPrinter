@@ -12,9 +12,9 @@ namespace LabelGenerator
 {
     public class FileSystemLabelRepository : ILabelRepository
     {
-        private List<Label> _labels;
+        private List<LabelTemplate> _labels;
         
-        public Label FetchLabel(string name)
+        public LabelTemplate FetchLabel(string name)
         {
             if (_labels == null)
                 LoadLabels();
@@ -22,7 +22,7 @@ namespace LabelGenerator
             return _labels?.FirstOrDefault(n => n.Name == name);
         }
 
-        public IEnumerable<Label> FetchAllLabels()
+        public IEnumerable<LabelTemplate> FetchAllLabels()
         {
             if (_labels == null)
                 LoadLabels();
@@ -41,11 +41,11 @@ namespace LabelGenerator
                 while ((currentLine = r.ReadLine()) != null)
                     json.Append(currentLine.Trim());
 
-                _labels = json.ToString().FromJson<List<Label>>();
+                _labels = json.ToString().FromJson<List<LabelTemplate>>();
             }
         }
 
-        public bool SaveLabel(Label label)
+        public bool SaveLabel(LabelTemplate label)
         {
             var updatedLabels = _labels.Where(n => n.Name != label.Name).ToList();
 
@@ -57,7 +57,7 @@ namespace LabelGenerator
             return SaveAllLabels(updatedLabels);
         }
 
-        public bool SaveAllLabels(IEnumerable<Label> labels)
+        public bool SaveAllLabels(IEnumerable<LabelTemplate> labels)
         {
             var success = true;
             try
@@ -75,7 +75,7 @@ namespace LabelGenerator
             return success;
         }
 
-        public bool DeleteLabel(Label label)
+        public bool DeleteLabel(LabelTemplate label)
         {
             throw new NotImplementedException();
         }

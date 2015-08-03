@@ -16,8 +16,8 @@ namespace LabelPrinter.App.Pages
     /// </summary>
     public partial class Printers : UserControl
     {
-        private readonly string _imageLocation;
-        private readonly ILabelGenerator _labelGenerator;
+        private readonly string _labelLocation;
+        private readonly ILabelTemplateManager _labelTemplateManager;
         private readonly LabelItem _labelItem;
 
         public BitmapImage GetImgLargeLabel
@@ -32,50 +32,56 @@ namespace LabelPrinter.App.Pages
 
         public Printers()
         {
-            _labelGenerator = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelGenerator>();
+            _labelTemplateManager = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelTemplateManager>();
             
             var args = Environment.GetCommandLineArgs();
 
-            _imageLocation = args[1];
+            _labelLocation = args[1];
 
-          //  if (_labelGenerator != null)
-              //  _labelItem = _labelGenerator.ParseSourceItem(_imageLocation);
+          //  if (_labelTemplateManager != null)
+              //  _labelItem = _labelTemplateManager.ParseSourceItem(_labelLocation);
 
             InitializeComponent();
         }
 
+
+        private void GenerateFormItems()
+        {
+            
+        }
+
         private BitmapImage GetLargeLabel()
         {
-            if (!string.IsNullOrEmpty(_imageLocation))
+            /*if (!string.IsNullOrEmpty(_labelLocation))
             {
                 if (_labelItem != null)
                 {
-                    var fullLabel = _labelGenerator.GenerateFullLabel(_labelItem);
+                    var fullLabel = _labelTemplateManager.GenerateFullLabel(_labelItem);
 
                     if (fullLabel != null)
                     {
                         return fullLabel.ToBitmapImage();
                     }
                 }
-            }
+            }*/
 
             return new BitmapImage();
         }
 
         private BitmapImage GetSpineLabel()
         {
-            if (!string.IsNullOrEmpty(_imageLocation))
+        /*    if (!string.IsNullOrEmpty(_labelLocation))
             {
                 if (_labelItem != null)
                 {
-                    var fullLabel = _labelGenerator.GenerateSpineLabel(_labelItem);
+                    var fullLabel = _labelTemplateManager.GenerateSpineLabel(_labelItem);
 
                     if (fullLabel != null)
                     {
                         return fullLabel.ToBitmapImage();
                     }
                 }
-            }
+            }*/
 
             return new BitmapImage();
         }
