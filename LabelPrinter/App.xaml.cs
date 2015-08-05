@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using LabelGenerator;
 using LabelGenerator.Interfaces;
+using LabelGenerator.Objects;
 
 namespace FirstFloor.ModernUI.App
 {
@@ -19,6 +20,7 @@ namespace FirstFloor.ModernUI.App
             Container.Register<IBitmapGenerator, BitmapGenerator>();
             Container.Register<ILabelTemplateManager, LabelTemplateManager>();
             Container.Register<ILabelManager, LabelManager>();
+            Container.Register<IFileManager, FileManager>();
 
             base.OnStartup(e);
         }

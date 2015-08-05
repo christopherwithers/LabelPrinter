@@ -1,67 +1,109 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using Extensions;
 using LabelGenerator.Interfaces;
+using NLog;
 
+//Make internals visible to testing framework
+#if DEBUG
+[assembly: InternalsVisibleTo("LabelPrinter.Tests")]
+#endif
 namespace LabelGenerator
 {
     public class LabelManager : ILabelManager
     {
-        private XmlDocument _document;
+        internal XmlDocument Document;
+
+        private readonly IFileManager _fileManager;
+
+        public LabelManager(IFileManager fileManager)
+        {
+            _fileManager = fileManager;
+
+            Log = LogManager.GetCurrentClassLogger();
+        }
+
+        public ILogger Log { get; set; }
 
         //todo: should we refactor this to an IDocument manager?? Or just stub out for unit testing??
-        internal bool SourceLocation(string location)
+        internal async Task<bool> SourceLocation(string location)
         {
             var success = true;
 
+            var xml = await _fileManager.ReadFile(location);
+
             try
             {
-                using (var r = new StreamReader(location))
-                {
-                    string currentLine;
-                    var xmlDoc = new StringBuilder();
-                    while ((currentLine = r.ReadLine()) != null)
-                        xmlDoc.Append(currentLine.Trim());
+                Document = new XmlDocument();
 
-                    _document = new XmlDocument();
-                    _document.LoadXml(xmlDoc.ToString());
-                }
+                Document.LoadXml(xml);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 success = false;
-                _document = null;
+                Document = null;
+
+                Log.Error(ex);
             }
 
             return success;
         }
 
-        public Dictionary<string, string> ParseLabelFromFile(string fileLocation)
+        public virtual async Task<Dictionary<string, string>> ParseLabelFromFile(string fileLocation)
         {
-            if (!SourceLocation(fileLocation))
-                return null;
+            if (!await SourceLocation(fileLocation))
+            {
+                Log.Error($"The location string '{fileLocation}' is invalid");
 
-            if (_document?.DocumentElement == null)
                 return null;
+            }
 
-            var xDoc = _document.ToXDocument();
+            if (Document?.DocumentElement == null)
+            {
+                Log.Error($"The generated XML from '{fileLocation}' is malformed. The 'DocumentElement' is null.");
 
-            if (xDoc.Root == null)
                 return null;
+            }
+
+
+            var xDoc = ConvertXmlDocumentToXDocument(Document);
 
             var outputDict = new Dictionary<string, string>();
+
+            if (xDoc?.Root == null)
+                return null;
 
             foreach (var element in xDoc.Root.Elements())
             {
                 RecParseXDoc(element, outputDict);
             }
 
-
             return outputDict;
+        }
+
+        internal virtual XDocument ConvertXmlDocumentToXDocument(XmlDocument xmlDocument)
+        {
+            XDocument xDoc = null;
+
+            try
+            {
+                xDoc = xmlDocument.ToXDocument();
+
+                if (xDoc.Root == null)
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
+
+            return xDoc;
         }
 
         private static void RecParseXDoc(XElement element, IDictionary<string, string> xDict)

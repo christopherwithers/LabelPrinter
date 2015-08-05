@@ -35,6 +35,10 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.0.1\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -50,20 +54,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapGenerator.cs" />
-    <Compile Include="FileSystemLabelRepository.cs" />
     <Compile Include="Interfaces\IBitmapGenerator.cs" />
+    <Compile Include="Interfaces\IFileManager.cs" />
     <Compile Include="Interfaces\ILabelManager.cs" />
     <Compile Include="Interfaces\ILabelTemplateManager.cs" />
-    <Compile Include="Interfaces\ILabelRepository.cs" />
-    <Compile Include="Interfaces\ISourceParser.cs" />
     <Compile Include="LabelManager.cs" />
     <Compile Include="LabelTemplateManager.cs" />
     <Compile Include="Objects\BitmapGenerator\LabelBitmap.cs" />
     <Compile Include="Objects\Extensions\GdiHelpers.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="Objects\LabelConfig\LabelTemplate.cs" />
     <Compile Include="Objects\SourceParser\LabelItem.cs" />
     <Compile Include="Objects\SourceParser\Section.cs" />
-    <Compile Include="XmlSourceParser.cs" />
     <Compile Include="Objects\SourceParser\Z13.cs" />
     <Compile Include="Objects\SourceParser\Z30.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +82,7 @@
     <None Include="Config\labels.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="nlog.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

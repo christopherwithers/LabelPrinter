@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -22,7 +23,7 @@ namespace LabelPrinter.App.Pages
         private readonly ILabelManager _labelManager;
         private readonly IBitmapGenerator _bitmapGenerator;
 
-        private readonly Dictionary<string, string> _labelItem;
+        private Dictionary<string, string> _labelItem;
 
         public PrintLabels()
         {
@@ -35,37 +36,50 @@ namespace LabelPrinter.App.Pages
             if (_labelLocation == null)
                 ErrorMessage(true);
 
-                _labelItem = _labelManager?.ParseLabelFromFile(_labelLocation);
-
             InitializeComponent();
 
             GenerateFormItems();
         }
 
 
-        private void GenerateFormItems()
+        private async void GenerateFormItems()
         {
-            if (!string.IsNullOrEmpty(_labelLocation))
+            var labelFromFile = _labelManager?.ParseLabelFromFile(_labelLocation);
+
+            if (labelFromFile != null)
             {
-                if (_labelItem != null)
+                _labelItem = await labelFromFile;
+
+                if (!string.IsNullOrEmpty(_labelLocation))
                 {
-                    foreach (var template in _labelTemplateManager.FetchAllLabelTemplates())
+                    if (_labelItem != null)
                     {
-                        var fullLabel = _bitmapGenerator?.GenerateLabel(_labelItem, template);
-
-                        if (fullLabel != null)
+                        foreach (var template in _labelTemplateManager.FetchAllLabelTemplates())
                         {
-                            var stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
-                            stackPanel.Children.Add(new TextBlock {Text = "Label Name", Style = (Style)FindResource("Heading2") });
-                            SpLabels.Children.Add(stackPanel);
+                            var fullLabel = _bitmapGenerator?.GenerateLabel(_labelItem, template);
 
-                            stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
-                            stackPanel.Children.Add(new Image {Source = fullLabel.Bitmap.ToBitmapImage()});
-                            var printLabelButton = new ModernButton {Name = "Labelname", IconData = (Geometry) SpMain.Resources["PrintIcon"]};
-                            printLabelButton.Click += PrintLabelButtonOnClick;
-                            stackPanel.Children.Add(printLabelButton);
-                            SpLabels.Children.Add(stackPanel);
+                            if (fullLabel != null)
+                            {
+                                var stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
+                                stackPanel.Children.Add(new TextBlock
+                                {
+                                    Text = "Label Name",
+                                    Style = (Style) FindResource("Heading2")
+                                });
+                                SpLabels.Children.Add(stackPanel);
 
+                                stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
+                                stackPanel.Children.Add(new Image {Source = fullLabel.Bitmap.ToBitmapImage()});
+                                var printLabelButton = new ModernButton
+                                {
+                                    Name = "Labelname",
+                                    IconData = (Geometry) SpMain.Resources["PrintIcon"]
+                                };
+                                printLabelButton.Click += PrintLabelButtonOnClick;
+                                stackPanel.Children.Add(printLabelButton);
+                                SpLabels.Children.Add(stackPanel);
+
+                            }
                         }
                     }
                 }

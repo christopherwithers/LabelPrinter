@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LabelGenerator.Interfaces
 {
     public interface ILabelManager
     {
-        Dictionary<string, string> ParseLabelFromFile(string fileLocation);
+        Task<Dictionary<string, string>> ParseLabelFromFile(string fileLocation);
     }
 }
