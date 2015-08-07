@@ -6,7 +6,8 @@ using LabelGenerator.Interfaces;
 using NLog;
 
 namespace LabelGenerator
-{
+{   //Doe we need to go to the lengths in the link RE: pass in stream, so we can test this?
+    //http://stackoverflow.com/questions/9540472/how-to-unit-test-a-class-which-needs-a-specific-file-to-be-present
     public class FileManager : IFileManager
     {
         public FileManager()
@@ -20,6 +21,7 @@ namespace LabelGenerator
         {
             try
             {
+                //using (var r = new StreamReader(File.Open(location, FileMode.Open)))
                 using (var r = new StreamReader(location))
                 {
                     string currentLine;

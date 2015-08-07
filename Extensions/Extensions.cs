@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using ServiceStack.Text;
 
 namespace Extensions
@@ -27,7 +30,6 @@ namespace Extensions
         {
             return JsonSerializer.DeserializeFromString<T>(obj);
         }
-
 
 
         /// <summary>

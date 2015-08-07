@@ -5,10 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              xmlns:customControls="clr-namespace:PanAndZoom"
+             xmlns:code="clr-namespace:LabelPrinter.App.Code"
              mc:Ignorable="d"
              x:Name="TestWindow"
              d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{Binding RelativeSource={RelativeSource Self}}">
-   <!-- <Grid>
+    <!-- <Grid>
 
 
         <ScrollViewer>
@@ -32,13 +33,36 @@
                 <Style TargetType="{x:Type StackPanel}">
                     <Setter Property="Margin" Value="0,10,0,0"/>
                 </Style>
+                <Style TargetType="{x:Type mui:ModernButton}">
+                    <Setter Property="IconData" Value="{StaticResource PrintIcon}" />
+                    <Setter Property="Margin" Value="0,0,8,0" />
+                    <Setter Property="BorderThickness" Value="2" />
+                    <Setter Property="Margin" Value="20,0,0,0"/>
+                </Style>
             </StackPanel.Resources>
             <TextBlock Text="Print Labels" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
-            <mui:BBCodeBlock BBCode="To print labels individually, click the print button next to it, else press print all." Margin="0,0,0,16"/>
+            <StackPanel Orientation="Horizontal">
+                
+                <mui:BBCodeBlock BBCode="To print labels individually, click the print button next to it, else press print all." Margin="0,0,0,16"/>
 
+                <mui:ModernButton EllipseDiameter="64" EllipseStrokeThickness="2" IconWidth="42" IconHeight="42" />
+            </StackPanel>
+           <!-- <StackPanel Name="SPOpenFilePanel" Visibility="Collapsed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" IsReadOnly="True">
+                        <code:OpenFileDialogEx.Filter>Excel documents (.xml)|*.xml</code:OpenFileDialogEx.Filter>
+                    </TextBox>
+                    <Button Grid.Column="1">Browse</Button>
+                </Grid>
+            </StackPanel>-->
             <StackPanel Name="SpLabels">
 
             </StackPanel>
+
 
         </StackPanel>
 

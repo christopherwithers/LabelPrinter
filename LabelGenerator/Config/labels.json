@@ -126,6 +126,7 @@
   },
   {
     "Name": "SpineLabel",
+    "TemplateName": "SpineLabel",
     "FriendlyName": "Spine Label",
     "Printer": "Fax",
     "Width": 500,

@@ -14,12 +14,13 @@ namespace LabelGenerator
     {
        // private readonly ISourceParser _sourceParser;
       //  private readonly ILabelRepository _labelRepository;
+        
         private List<LabelTemplate> _labels;
 
         // private Dictionary<string, string> _sourceItemDict; 
-        private void LoadLabels()
+        internal void LoadLabels(string location)
         {
-            using (var r = new StreamReader(@"C:\Development\LabelPrinter\LabelGenerator\Config\labels.json"))
+            using (var r = new StreamReader(File.Open(location, FileMode.Open)))//new StreamReader($@"{AppDomain.CurrentDomain.BaseDirectory}\Config\labels.json"))
             {
                 //string json = r.ReadToEnd();
                 string currentLine;
@@ -42,7 +43,7 @@ namespace LabelGenerator
         public IEnumerable<LabelTemplate> FetchAllLabelTemplates()
         {
             if (_labels == null)
-                LoadLabels();
+                LoadLabels($@"{AppDomain.CurrentDomain.BaseDirectory}\Config\labels.json");
 
             return _labels;
         }
@@ -64,7 +65,7 @@ namespace LabelGenerator
             var success = true;
             try
             {
-                File.WriteAllText(@"C:\Development\LabelPrinter\LabelGenerator\Config\labels.json", JsonConvert.SerializeObject(labels, Formatting.Indented));
+                File.WriteAllText($@"{AppDomain.CurrentDomain.BaseDirectory}\Config\labels.json", JsonConvert.SerializeObject(labels, Formatting.Indented));
             }
             catch (Exception)
             {

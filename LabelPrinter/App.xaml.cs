@@ -2,6 +2,7 @@
 using LabelGenerator;
 using LabelGenerator.Interfaces;
 using LabelGenerator.Objects;
+using LightInject;
 
 namespace FirstFloor.ModernUI.App
 {
@@ -20,7 +21,7 @@ namespace FirstFloor.ModernUI.App
             Container.Register<IBitmapGenerator, BitmapGenerator>();
             Container.Register<ILabelTemplateManager, LabelTemplateManager>();
             Container.Register<ILabelManager, LabelManager>();
-            Container.Register<IFileManager, FileManager>();
+            Container.Register<IFileManager, FileManager>(new PerContainerLifetime());
 
             base.OnStartup(e);
         }

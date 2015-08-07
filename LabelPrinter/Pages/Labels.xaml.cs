@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Xps.Packaging;
 using Extensions;
-using FirstFloor.ModernUI.Windows.Controls;
 using LabelGenerator.Interfaces;
-using LabelGenerator.Objects.SourceParser;
-using LabelPrinter.App.Extensions;
 
 namespace LabelPrinter.App.Pages
 {
@@ -48,12 +38,13 @@ namespace LabelPrinter.App.Pages
 
             if (_labels.HasContent())
             {
+                StackPanel stackPanel;
                 foreach (var label in _labels)
                 {
-                    var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+                    stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
                     stackPanel.Children.Add(new Label { Content = label.FriendlyName });
-                    stackPanel.Children.Add(new ModernButton { IconData = (Geometry) SpMain.Resources["PrintIcon"] });
-                    stackPanel.Children.Add(new ModernButton { IconData = (Geometry)SpMain.Resources["PrintIcon"] });
+                  //  stackPanel.Children.Add(new ModernButton { IconData = (Geometry) SpMain.Resources["PrintIcon"], Width = 50});
+                    //stackPanel.Children.Add(new ModernButton { IconData = (Geometry)SpMain.Resources["PrintIcon"] });
 
                     var comboBox = new ComboBox();
                     GetInstalledPrinters().ForEach(i => comboBox.Items.Add(i));
@@ -62,13 +53,31 @@ namespace LabelPrinter.App.Pages
                         comboBox.SelectedItem = label.Printer;
                     stackPanel.Children.Add(comboBox);
 
-                    var printConfigButton = new ModernButton {IconData = (Geometry) SpMain.Resources["PrintIcon"], Name = label.Name};
-                    printConfigButton.Click += PrintConfigButtonOnClick;
-                    stackPanel.Children.Add(printConfigButton);
+                    
+
+                    // var printConfigButton = new ModernButton {IconData = (Geometry) SpMain.Resources["PrintIcon"], Name = label.Name};
+                    //   printConfigButton.Click += PrintConfigButtonOnClick;
+                    //   stackPanel.Children.Add(printConfigButton);
                     SpLabels.Children.Add(stackPanel);
                 }
+
+                stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+
+                var saveButton = new Button { Name = "Save", Content = "Save"};
+                saveButton.Click += SaveButtonOnClick;
+                stackPanel.Children.Add(saveButton);
+
+                SpLabels.Children.Add(stackPanel);
             }
 
+        }
+
+        private void SaveButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            if (_labelGenerator.SaveAllLabelTemplates(_labels))
+                _labels = _labelGenerator.FetchAllLabelTemplates();
+            else
+                MessageBox.Show("An error occurred, the printer settings could not be saved.");
         }
 
         private static List<string> GetInstalledPrinters()

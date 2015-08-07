@@ -15,8 +15,6 @@ namespace LabelGenerator
 {
     public class BitmapGenerator : IBitmapGenerator
     {
-       // private Dictionary<string, string> _sourceItemDict;
-
         public BitmapGenerator()
         {
             
@@ -43,7 +41,7 @@ namespace LabelGenerator
                     {
                         foreach (var font in customFonts)
                         {
-                            fontCollection.AddFontFile(@"C:\Development\LabelPrinter\LabelGenerator\bin\Debug\Fonts\" + font);
+                            fontCollection.AddFontFile($@"{AppDomain.CurrentDomain.BaseDirectory}\Fonts\{font}");
                         }
                     }
 
@@ -86,7 +84,7 @@ namespace LabelGenerator
                         }
                     }
 
-                    return new LabelBitmap {Bitmap = new Bitmap(labelImage)};
+                    return new LabelBitmap {Bitmap = new Bitmap(labelImage), Template = label };
 
                 }
             }

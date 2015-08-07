@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using FirstFloor.ModernUI.Windows.Controls;
 using LabelGenerator.Interfaces;
+using LabelPrinter.App.Code;
 using LabelPrinter.App.Extensions;
 
 namespace LabelPrinter.App.Pages
@@ -18,12 +16,14 @@ namespace LabelPrinter.App.Pages
     /// </summary>
     public partial class PrintLabels : UserControl
     {
-        private readonly string _labelLocation;
+        private string _labelLocation;
         private readonly ILabelTemplateManager _labelTemplateManager;
         private readonly ILabelManager _labelManager;
         private readonly IBitmapGenerator _bitmapGenerator;
 
         private Dictionary<string, string> _labelItem;
+
+        private EventHandler<CommandLineArgs> Tester;
 
         public PrintLabels()
         {
@@ -33,16 +33,34 @@ namespace LabelPrinter.App.Pages
 
             _labelLocation = new CommandLineArgs()["location"];
 
-            if (_labelLocation == null)
-                ErrorMessage(true);
+         //   OpenFileDialogEx.FileSelected += OpenFileDialogExOnFileSelected;
+            //  ErrorMessage(true);
 
             InitializeComponent();
 
-            GenerateFormItems();
+            if (_labelLocation != null)
+            {
+                GenerateFormItems();
+            }
+            else
+            {
+                MessageBox.Show(@"The file path command line 'location' was not found.");
+              //  SPOpenFilePanel.Visibility = Visibility.Visible;
+            }
+        }
+
+        private async void OpenFileDialogExOnFileSelected(object sender, FileSelectedEventArgs fileSelectedEventArgs)
+        {
+            _labelLocation = fileSelectedEventArgs.FileName;
+
+            if (await GenerateFormItems())
+            {
+                int i = 3;
+            }
         }
 
 
-        private async void GenerateFormItems()
+        private async Task<bool> GenerateFormItems()
         {
             var labelFromFile = _labelManager?.ParseLabelFromFile(_labelLocation);
 
@@ -63,17 +81,22 @@ namespace LabelPrinter.App.Pages
                                 var stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
                                 stackPanel.Children.Add(new TextBlock
                                 {
-                                    Text = "Label Name",
+                                    Text = fullLabel.Template.FriendlyName,
                                     Style = (Style) FindResource("Heading2")
                                 });
+
                                 SpLabels.Children.Add(stackPanel);
 
                                 stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
                                 stackPanel.Children.Add(new Image {Source = fullLabel.Bitmap.ToBitmapImage()});
                                 var printLabelButton = new ModernButton
                                 {
-                                    Name = "Labelname",
-                                    IconData = (Geometry) SpMain.Resources["PrintIcon"]
+                                    Name = fullLabel.Template.TemplateName,
+                                    IconData = (Geometry) SpMain.Resources["PrintIcon"],
+                                    EllipseDiameter = 64,
+                                    EllipseStrokeThickness = 2,
+                                    IconWidth = 42,
+                                    IconHeight = 42
                                 };
                                 printLabelButton.Click += PrintLabelButtonOnClick;
                                 stackPanel.Children.Add(printLabelButton);
@@ -81,23 +104,20 @@ namespace LabelPrinter.App.Pages
 
                             }
                         }
+
+                        return true;
                     }
                 }
             }
+
+            return false;
         }
 
         private static void PrintLabelButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
-        {
-            MessageBox.Show(((ModernButton) sender).Name);
+        {//((ModernButton) sender).Name
+            MessageBox.Show("Send to selected printer.");
         }
 
-        private void ErrorMessage(bool isError, string errorMessage = "")
-        {
-         /*   if (isError)
-            {
-                SpLabels.Children.Add(new Label {Content = "Error!"});
-            }*/
-        }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {

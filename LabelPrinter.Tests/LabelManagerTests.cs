@@ -18,7 +18,7 @@ namespace LabelPrinter.Tests
     * # MethodName_StateUnderTest_ ExpectedBehaviour #
     * ################################################
     */
-
+#if DEBUG
     [TestFixture]
     public class LabelManagerTests
     {
@@ -39,7 +39,7 @@ namespace LabelPrinter.Tests
             _labelManager = new LabelManager(_fileManager.Object);
         }
 
-        #region SourceLocation Tests
+#region SourceLocation Tests
 
         [Test]
         public async Task SourceLocation_ValidLocationValidXMLFormat_ReturnsTrue()
@@ -71,9 +71,9 @@ namespace LabelPrinter.Tests
             Assert.IsFalse(result);
         }
 
-        #endregion
+#endregion
 
-        #region ConvertXmlDocumentToXDocument Tests
+#region ConvertXmlDocumentToXDocument Tests
         [Test]
         public void ConvertXmlDocumentToXDocument_InvalidXmlDocument_ReturnsNull()
         {
@@ -93,9 +93,9 @@ namespace LabelPrinter.Tests
 
             Assert.IsInstanceOf<XDocument>(result);
         }
-        #endregion
+#endregion
 
-        #region ParseLabelFromFile Tests
+#region ParseLabelFromFile Tests
         [Test]
         public async Task ParseLabelFromFile_InvalidLocation_ReturnsNull()
         {
@@ -128,7 +128,7 @@ namespace LabelPrinter.Tests
             Assert.IsInstanceOf<IDictionary<string, string>>(result);
         }
 
-        #endregion
+#endregion
 
         [TearDown]
         public void TearDown()
@@ -137,4 +137,5 @@ namespace LabelPrinter.Tests
             _labelManager = null;
         }
     }
+#endif
 }
