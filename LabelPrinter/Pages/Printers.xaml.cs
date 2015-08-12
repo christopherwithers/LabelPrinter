@@ -89,6 +89,7 @@ namespace LabelPrinter.App.Pages
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
+            
             /*var printerSettings = new PrinterSettings();
             var labelPaperSize = new PaperSize { RawKind = (int)PaperKind.A6, Height = 148, Width = 105 };
             printerSettings.DefaultPageSettings.PaperSize = labelPaperSize;

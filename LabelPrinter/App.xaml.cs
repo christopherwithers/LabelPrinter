@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using LabelGenerator;
 using LabelGenerator.Interfaces;
 using LabelGenerator.Objects;
@@ -11,7 +13,8 @@ namespace FirstFloor.ModernUI.App
     /// </summary>
     public partial class App : Application
     {
-        public static LightInject.ServiceContainer Container = new LightInject.ServiceContainer();
+        
+        public static readonly ServiceContainer Container = new ServiceContainer();
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Application.Startup"/> event.
         /// </summary>
@@ -23,7 +26,14 @@ namespace FirstFloor.ModernUI.App
             Container.Register<ILabelManager, LabelManager>();
             Container.Register<IFileManager, FileManager>(new PerContainerLifetime());
 
+
+
+
             base.OnStartup(e);
         }
+
+
+
+
     }
 }

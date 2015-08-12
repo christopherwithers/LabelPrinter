@@ -1,4 +1,7 @@
-﻿using FirstFloor.ModernUI.Windows.Controls;
+﻿using System;
+using System.IO;
+using System.Windows;
+using FirstFloor.ModernUI.Windows.Controls;
 
 namespace FirstFloor.ModernUI.App
 {
@@ -7,9 +10,16 @@ namespace FirstFloor.ModernUI.App
     /// </summary>
     public partial class MainWindow : ModernWindow
     {
+        
+
         public MainWindow()
         {
             InitializeComponent();
+
+
         }
+
+
+        
     }
 }

@@ -26,6 +26,8 @@ namespace LabelPrinter.Tests
        // private LabelManager _labelManagerMock;
         private Mock<FileManager> _fileManager;
 
+        
+
         private const string ValidLocation = "ValidLocation";
         private const string InvalidLocation = "InvalidLocation";
 
@@ -123,9 +125,9 @@ namespace LabelPrinter.Tests
         {
             _fileManager.Setup(n => n.ReadFile(It.IsAny<string>())).ReturnsAsync(XmlString);
 
-            var result = await _labelManager.ParseLabelFromFile(ValidLocation);
+            var result = await _labelManager.ParseLabelFromFile($"{ValidLocation}.xml");
 
-            Assert.IsInstanceOf<IDictionary<string, string>>(result);
+            Assert.IsInstanceOf<Dictionary<string, string>>(result);
         }
 
 #endregion

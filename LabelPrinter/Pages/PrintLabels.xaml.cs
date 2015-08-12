@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Printing;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using FirstFloor.ModernUI.Windows.Controls;
 using LabelGenerator.Interfaces;
-using LabelPrinter.App.Code;
 using LabelPrinter.App.Extensions;
 
 namespace LabelPrinter.App.Pages
@@ -20,10 +21,9 @@ namespace LabelPrinter.App.Pages
         private readonly ILabelTemplateManager _labelTemplateManager;
         private readonly ILabelManager _labelManager;
         private readonly IBitmapGenerator _bitmapGenerator;
-
-        private Dictionary<string, string> _labelItem;
-
-        private EventHandler<CommandLineArgs> Tester;
+        private FileSystemWatcher _fsWatcher;
+        DateTime _lastRead = DateTime.MinValue;
+        // private Dictionary<string, string> _labelItem;
 
         public PrintLabels()
         {
@@ -41,23 +41,48 @@ namespace LabelPrinter.App.Pages
             if (_labelLocation != null)
             {
                 GenerateFormItems();
+
+                if (_fsWatcher == null)
+                {
+                    try
+                    {
+                        _fsWatcher = new FileSystemWatcher
+                        {
+                            NotifyFilter = NotifyFilters.LastWrite,
+                            Path = $@"{AppDomain.CurrentDomain.BaseDirectory}\Config\",
+                            Filter = "labels.json",
+                            EnableRaisingEvents = true
+                        };
+                        _fsWatcher.Changed += FsWatcherOnChanged;
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
             }
             else
             {
+                
+
                 MessageBox.Show(@"The file path command line 'location' was not found.");
               //  SPOpenFilePanel.Visibility = Visibility.Visible;
             }
         }
 
-        private async void OpenFileDialogExOnFileSelected(object sender, FileSelectedEventArgs fileSelectedEventArgs)
+        private async void FsWatcherOnChanged(object sender, FileSystemEventArgs fileSystemEventArgs)
         {
-            _labelLocation = fileSelectedEventArgs.FileName;
+            // await GenerateFormItems();
+            var lastWriteTime = File.GetLastWriteTime($@"{AppDomain.CurrentDomain.BaseDirectory}\Config\labels.json");
 
-            if (await GenerateFormItems())
+            if (lastWriteTime != _lastRead)
             {
-                int i = 3;
+                GenerateFormItems();
+                _lastRead = lastWriteTime;
             }
+
+            
         }
+
 
 
         private async Task<bool> GenerateFormItems()
@@ -66,19 +91,26 @@ namespace LabelPrinter.App.Pages
 
             if (labelFromFile != null)
             {
-                _labelItem = await labelFromFile;
+
+
+                Dictionary<string, string> _labelItem = await labelFromFile;
 
                 if (!string.IsNullOrEmpty(_labelLocation))
                 {
                     if (_labelItem != null)
                     {
+                        /*if (SpLabels.Children.Count > 0)
+                        {
+                            SpLabels.Children.RemoveAt(SpLabels.Children.Count - 1);
+                        }*/
                         foreach (var template in _labelTemplateManager.FetchAllLabelTemplates())
                         {
                             var fullLabel = _bitmapGenerator?.GenerateLabel(_labelItem, template);
 
                             if (fullLabel != null)
                             {
-                                var stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
+                                
+                                   var stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
                                 stackPanel.Children.Add(new TextBlock
                                 {
                                     Text = fullLabel.Template.FriendlyName,
@@ -88,7 +120,7 @@ namespace LabelPrinter.App.Pages
                                 SpLabels.Children.Add(stackPanel);
 
                                 stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
-                                stackPanel.Children.Add(new Image {Source = fullLabel.Bitmap.ToBitmapImage()});
+                                stackPanel.Children.Add(new Image {Source = fullLabel.Bitmap.ToBitmapImage(), Width = fullLabel.Bitmap.Width, Height = fullLabel.Bitmap.Height});
                                 var printLabelButton = new ModernButton
                                 {
                                     Name = fullLabel.Template.TemplateName,
@@ -98,7 +130,38 @@ namespace LabelPrinter.App.Pages
                                     IconWidth = 42,
                                     IconHeight = 42
                                 };
-                                printLabelButton.Click += PrintLabelButtonOnClick;
+                                printLabelButton.Click +=
+                                    (sender, args) =>
+                                    {
+                                        if (string.IsNullOrEmpty(template.Printer))
+                                        {
+                                            MessageBox.Show("No printer is associated with this label. Please add one in the Edit Labels tab.");
+                                        }
+                                        else
+                                        {
+                                            var printer = new LocalPrintServer().GetPrintQueue(template.Printer);
+
+                                            var dialog = new PrintDialog
+                                            {
+                                                PrintQueue = printer
+                                            };
+
+                                            var vis = new DrawingVisual();
+                                            var dc = vis.RenderOpen();
+                                            var btmp = _bitmapGenerator.GenerateLabel(_labelItem, template);
+                                            dc.DrawImage(btmp.Bitmap.ToBitmapImage(), new Rect { Width = btmp.Bitmap.Width, Height = btmp.Bitmap.Height });
+                                            dc.Close();
+
+
+                                            dialog.PrintVisual(vis, template.FriendlyName);
+
+                                            dialog = null;
+                                            vis = null;
+                                            dc = null;
+                                            btmp = null;
+                                        }
+                                    };
+                                   
                                 stackPanel.Children.Add(printLabelButton);
                                 SpLabels.Children.Add(stackPanel);
 
@@ -113,84 +176,5 @@ namespace LabelPrinter.App.Pages
             return false;
         }
 
-        private static void PrintLabelButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
-        {//((ModernButton) sender).Name
-            MessageBox.Show("Send to selected printer.");
-        }
-
-
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            /*var printerSettings = new PrinterSettings();
-            var labelPaperSize = new PaperSize { RawKind = (int)PaperKind.A6, Height = 148, Width = 105 };
-            printerSettings.DefaultPageSettings.PaperSize = labelPaperSize;
-            var labelPaperSource = new PaperSource { RawKind = (int)PaperSourceKind.Manual };
-            printerSettings.DefaultPageSettings.PaperSource = labelPaperSource;
-            if (printerSettings.CanDuplex)
-            {
-                printerSettings.Duplex = Duplex.Default;
-            }
-
-            var pd = new PrintDocument
-            {
-                DefaultPageSettings = {Margins = new Margins(0, 0, 0, 0)},
-                OriginAtMargins = false, 
-                PrinterSettings = printerSettings
-            };
-
-            var pdialog = new PrintDialog();
-
-            if (pdialog.ShowDialog() == true)
-            {
-                var vis = new DrawingVisual();
-                var dc = vis.RenderOpen();
-                var btmp = GetLargeLabel();
-                    dc.DrawImage(btmp, new Rect { Width = btmp.Width, Height = btmp.Height });
-                    dc.Close();
-
-
-                   // System.Printing.ValidationResult result = pdialog.PrintQueue.MergeAndValidatePrintTicket(pdialog.PrintQueue.UserPrintTicket, pdialog.PrintTicket);
-
-                    pdialog.PrintVisual(vis, "my print job");
-            }*/
-
-//
-  //          DoPreview("sdfdsf");
-
-
-            //############################
-            //Working:
-          /*  PrintDialog dlg = new PrintDialog();
-            bool? result = dlg.ShowDialog();
-
-            if (result.HasValue && result.Value)
-            {
-                ImgLargeLabel.Measure(new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight));
-                ImgLargeLabel.Arrange(new Rect(new Point(0, 0), ImgLargeLabel.DesiredSize));
-
-                dlg.PrintVisual(ImgLargeLabel, "Print a Large Image");
-            }*/
-
-            var dlg = new PrintDialog();
-
-            var result = dlg.ShowDialog();
-
-            if (result.HasValue && result.Value)
-            {
-             //   ImgLargeLabel.Measure(new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight));
-               // ImgLargeLabel.Arrange(new Rect(new Point(0, 0), ImgLargeLabel.DesiredSize));
-
-              //  dlg.PrintVisual(ImgLargeLabel, "Print a Large Image");
-
-             //   var someVar = dlg.PrintQueue.FullName;
-
-                MessageBox.Show(dlg.PrintQueue.FullName);
-            }
-
-           // printDialog.PrintQueue = new PrintQueue(new PrintServer(), "PrinterName");
-            
-            //printDialog.PrintDocument(document, "PrintDocument");
-            //######################################
-        }
     }
 }

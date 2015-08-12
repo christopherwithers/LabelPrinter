@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -20,6 +21,46 @@ namespace Extensions
         {
             return JsonSerializer.SerializeToString(obj);
         }
+
+     /*   public static int ToPixel(this int mm)
+        {
+            return mm;
+            float dx, dy;
+
+            using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                dx = graphics.DpiX;
+                dy = graphics.DpiY;
+            }
+
+            return (int) ((mm* 203) / 25.4);
+        }
+
+        public static float ToPixel(this float mm)
+        {
+            float dx, dy;
+
+            using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                dx = graphics.DpiX;
+                dy = graphics.DpiY;
+            }
+
+            return (float)((mm * dx) / 25.4);
+        }
+
+        public static double ToPixel(this double mm)
+        {
+            float dx, dy;
+
+            using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                dx = graphics.DpiX;
+                dy = graphics.DpiY;
+            }
+
+            return (double)((mm * dx) / 25.4);
+        }*/
 
         /// <summary>
         /// Converts Json object to the specified 'T' class object.

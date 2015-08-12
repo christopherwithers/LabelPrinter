@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="LabelPrinter.App.Pages.ViewLabels"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             mc:Ignorable="d"
+             x:Name="TestWindow"
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+        <TextBlock Text="Print Labels" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
+        
+
+            <mui:BBCodeBlock BBCode="To print labels individually, click the print button next to it, else press print all." Margin="0,0,0,16"/>
+
+            <Button Content="Print All" Click="PrintAll_OnClick" Width="100"></Button>
+        </StackPanel>
+    
+    <ListView ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled"
+      ItemsSource="{Binding Path=LabelImages}" Grid.Row="1">
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel
+            Width="Auto"
+            ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
+            ItemHeight="{Binding (ListView.View).ItemHeight, RelativeSource={RelativeSource AncestorType=ListView}}" />
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style>
+                    <Style.Triggers>
+                        <Trigger Property="Control.IsMouseOver" Value="True">
+                            <Setter Property="Control.Background" Value="Transparent" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate >
+            <DataTemplate >
+            
+                <StackPanel Orientation="Vertical">
+                    
+                    <StackPanel.Resources>
+                        <PathGeometry x:Key="PrintIcon">F1 M 25,27L 25,17L 51,17L 51,27L 47,27L 47,21L 29,21L 29,27L 25,27 Z M 16,28L 60,28L 60,51L 51,51L 51,60L 25,60L 25,51L 16,51L 16,28 Z M 55,46L 55,33L 21,33L 21,46L 55,46 Z M 25,44L 25,39L 51,39L 51,44L 25,44 Z</PathGeometry>
+                        <Style TargetType="{x:Type Label}">
+                            <Setter Property="Margin" Value="0,10,0,0"/>
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="FontWeight" Value="Bold"></Setter>
+                        </Style>
+                        <Style TargetType="{x:Type mui:ModernButton}">
+                            <Setter Property="IconData" Value="{StaticResource PrintIcon}" />
+                            <Setter Property="Margin" Value="0,0,8,0" />
+                            <Setter Property="BorderThickness" Value="2" />
+                        </Style>
+                    </StackPanel.Resources>
+                    
+                    <Label Content="{Binding Path=Template.FriendlyName}" ></Label>
+                    <Border Width="{Binding DisplayImage.Width}" Height="{Binding DisplayImage.Height}" BorderThickness="1" BorderBrush="DarkGray" VerticalAlignment="Center" Margin="7,5,7,5">
+                        <Image Margin="5,5,5,5" Width="{Binding DisplayImage.Width}" Height="{Binding DisplayImage.Height}" Source="{Binding Path=DisplayImage}" Stretch="Fill"></Image>
+                        
+                    </Border>
+                        <Button Tag="{Binding Template.TemplateName}" Content="{Binding Template.FriendlyName}" ContentStringFormat="Print {0}" Click="ButtonBase_OnClick"></Button>
+                </StackPanel>
+
+            </DataTemplate>
+        </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

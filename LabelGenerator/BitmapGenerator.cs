@@ -27,12 +27,17 @@ namespace LabelGenerator
 
         private LabelBitmap GenerateBitmapFromLabelTemplate(LabelTemplate label, Dictionary<string, string> labelContent)
         {
+     //       Rectangle resolution = Screen.PrimaryScreen.Bounds;
+
+
             if (label != null)
             {
                 var imageSize = new Point(label.Width, label.Height);
                 using (var labelImage = new Bitmap(imageSize.X, imageSize.Y))
                 using (var graphics = Graphics.FromImage(labelImage))
                 {
+                   // labelImage.SetResolution(8, 8);
+                    
                     var fontCollection = new PrivateFontCollection();
 
                     var customFonts = label.Fonts.Where(n => n.Custom).Select(n => n.Location).Distinct();
@@ -54,12 +59,12 @@ namespace LabelGenerator
                         else
                             fontDict.Add(font.Name, new Font(font.FontFamily, font.Size, font.Style));
                     }
-
+                    
                     graphics.Clear(Color.White);
                     graphics.CompositingQuality = CompositingQuality.HighQuality;
                     graphics.SmoothingMode = SmoothingMode.HighQuality;
                     graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                    graphics.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
                     graphics.PageUnit = GraphicsUnit.Pixel;
                     var sb1 = new SolidBrush(Color.Black);
 

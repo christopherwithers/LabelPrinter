@@ -20,7 +20,7 @@ namespace LabelGenerator
         // private Dictionary<string, string> _sourceItemDict; 
         internal void LoadLabels(string location)
         {
-            using (var r = new StreamReader(File.Open(location, FileMode.Open)))//new StreamReader($@"{AppDomain.CurrentDomain.BaseDirectory}\Config\labels.json"))
+            using (var r = new StreamReader(location))//new StreamReader(File.Open(location, FileMode.Open)))//
             {
                 //string json = r.ReadToEnd();
                 string currentLine;
@@ -42,7 +42,7 @@ namespace LabelGenerator
 
         public IEnumerable<LabelTemplate> FetchAllLabelTemplates()
         {
-            if (_labels == null)
+            //if (_labels == null)
                 LoadLabels($@"{AppDomain.CurrentDomain.BaseDirectory}\Config\labels.json");
 
             return _labels;

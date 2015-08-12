@@ -136,6 +136,7 @@
     <Compile Include="Code\CommandLineArgs.cs" />
     <Compile Include="Code\CustomControls\ZoomBorder.cs" />
     <Compile Include="Code\Extensions\WpfHelpers.cs" />
+    <Compile Include="Code\Models\DisplayLabel.cs" />
     <Compile Include="Code\OpenFileDialogEx.cs" />
     <Compile Include="Content\ContentLoaderImages.xaml.cs">
       <DependentUpon>ContentLoaderImages.xaml</DependentUpon>
@@ -185,6 +186,9 @@
     </Compile>
     <Compile Include="Pages\Labels.xaml.cs">
       <DependentUpon>Labels.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ViewLabels.xaml.cs">
+      <DependentUpon>ViewLabels.xaml</DependentUpon>
     </Compile>
     <Compile Include="SampleFormViewModel.cs" />
     <Compile Include="FlickrImageLoader.cs" />
@@ -468,6 +472,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\Labels.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\ViewLabels.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

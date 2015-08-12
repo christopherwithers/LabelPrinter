@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using Extensions;
 using LabelGenerator.Interfaces;
 
@@ -15,7 +19,7 @@ namespace LabelPrinter.App.Pages
     {
         private readonly ILabelTemplateManager _labelGenerator;
 
-        private IEnumerable<LabelGenerator.Objects.LabelConfig.LabelTemplate> _labels;
+        public IEnumerable<LabelGenerator.Objects.LabelConfig.LabelTemplate> _labels;
 
 
         public Labels()
@@ -26,7 +30,7 @@ namespace LabelPrinter.App.Pages
 
             if (_labelGenerator != null)
                 GenerateFormItems();
-            
+
         }
 
         private void GenerateFormItems()
@@ -43,27 +47,29 @@ namespace LabelPrinter.App.Pages
                 {
                     stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
                     stackPanel.Children.Add(new Label { Content = label.FriendlyName });
-                  //  stackPanel.Children.Add(new ModernButton { IconData = (Geometry) SpMain.Resources["PrintIcon"], Width = 50});
-                    //stackPanel.Children.Add(new ModernButton { IconData = (Geometry)SpMain.Resources["PrintIcon"] });
 
-                    var comboBox = new ComboBox();
-                    GetInstalledPrinters().ForEach(i => comboBox.Items.Add(i));
 
-                   // if (!string.IsNullOrEmpty(label.Printer))
-                        comboBox.SelectedItem = label.Printer;
+
+                    var comboBox = new ComboBox {Name = label.Name};
+
+                    comboBox.SetBinding(
+                       ItemsControl.ItemsSourceProperty,
+                       new Binding { Source = GetInstalledPrinters() });
+
+                    comboBox.SelectedValue = label.Printer;
+
+                    comboBox.SetBinding(
+                       Selector.SelectedItemProperty,
+                       new Binding("Printer") { Source = label, Mode = BindingMode.TwoWay });
+
                     stackPanel.Children.Add(comboBox);
 
-                    
-
-                    // var printConfigButton = new ModernButton {IconData = (Geometry) SpMain.Resources["PrintIcon"], Name = label.Name};
-                    //   printConfigButton.Click += PrintConfigButtonOnClick;
-                    //   stackPanel.Children.Add(printConfigButton);
                     SpLabels.Children.Add(stackPanel);
                 }
 
                 stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
 
-                var saveButton = new Button { Name = "Save", Content = "Save"};
+                var saveButton = new Button { Name = "Save", Content = "Save" };
                 saveButton.Click += SaveButtonOnClick;
                 stackPanel.Children.Add(saveButton);
 
@@ -80,51 +86,14 @@ namespace LabelPrinter.App.Pages
                 MessageBox.Show("An error occurred, the printer settings could not be saved.");
         }
 
-        private static List<string> GetInstalledPrinters()
+        private static ObservableCollection<string> GetInstalledPrinters()
         {
             var printServer = new LocalPrintServer();
 
             var printQueuesOnLocalServer = printServer.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
-            var printers = printQueuesOnLocalServer.Select(printer => printer.FullName).ToList();
+            var printers = new ObservableCollection<string>(printQueuesOnLocalServer.Select(printer => printer.FullName).ToList());
 
             return printers;
-        }
-
-      /*  private class tstDialog : PrintDialog
-        {
-            public tstDialog()
-            {
-                this.Controls
-               // ((ToolStripButton)((ToolStrip)this.Controls[1]).Items[0]).Enabled = false;
-            }
-
-            
-        }*/
-
-        private void PrintConfigButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
-        {
-           /* var source = (ModernButton) sender;
-
-            if (source != null)
-            {
-
-                var dlg = new PrintDialog();
-
-                var result = dlg.ShowDialog();
-
-                if (result.HasValue && result.Value)
-                {
-                    var label = _labels.FirstOrDefault(n => n.Name == source.Name);
-
-                    if (label != null)
-                    {
-                        label.Printer = dlg.PrintQueue.FullName;
-
-                        if (!_labelGenerator.SaveLabelTemplate(label))
-                            MessageBox.Show("Couldn't save!");
-                    }
-                }
-            }*/
         }
     }
 }
