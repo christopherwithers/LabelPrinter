@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Extensions;
 using FirstFloor.ModernUI.Windows.Controls;
+using LabelGenerator;
 using LabelGenerator.Interfaces;
 using LabelGenerator.Objects.BitmapGenerator;
 using LabelGenerator.Objects.LabelConfig;
@@ -28,6 +29,7 @@ namespace LabelPrinter.App.Pages
         private readonly ILabelTemplateManager _labelTemplateManager;
         private readonly ILabelManager _labelManager;
         private readonly IBitmapGenerator _bitmapGenerator;
+        private readonly IFileManager _fileManager;
         private FileSystemWatcher _fsWatcher;
         DateTime _lastRead = DateTime.MinValue;
 
@@ -38,31 +40,39 @@ namespace LabelPrinter.App.Pages
             _labelTemplateManager = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelTemplateManager>();
             _labelManager = FirstFloor.ModernUI.App.App.Container.GetInstance<ILabelManager>();
             _bitmapGenerator = FirstFloor.ModernUI.App.App.Container.GetInstance<IBitmapGenerator>();
+            _fileManager = FirstFloor.ModernUI.App.App.Container.GetInstance<IFileManager>();
 
             _labelLocation = new CommandLineArgs()["location"];
             LabelImages = new ObservableCollection<DisplayLabel>();
-            //   OpenFileDialogEx.FileSelected += OpenFileDialogExOnFileSelected;
-            //  ErrorMessage(true);
-
-
-            // GetImages();
+     
             InitializeComponent();
+
             DataContext = this;
 
-
-            _fsWatcher = new FileSystemWatcher
+            var configDirectory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Config\";
+            if (_fileManager.CheckDirectoryExists(configDirectory))
             {
-                NotifyFilter = NotifyFilters.LastWrite,
-                Path = $@"{AppDomain.CurrentDomain.BaseDirectory}\Config\",
-                Filter = "labels.json",
-                EnableRaisingEvents = true
-            };
-            _fsWatcher.Changed += FsWatcherOnChanged;
+                _fsWatcher = new FileSystemWatcher
+                {
+                    NotifyFilter = NotifyFilters.LastWrite,
+                    Path = configDirectory,
+                    Filter = "labels.json",
+                    EnableRaisingEvents = true
+                };
+                _fsWatcher.Changed += FsWatcherOnChanged;
 
-            GetImages();
+                GetImages();
+            }
+            else
+            {
+                ModernDialog.ShowMessage($"An error occurred. The '{configDirectory}' directory could not be found.", "Error", MessageBoxButton.OK, Window.GetWindow(this));
 
-
+            }
+            
+         //   ModernDialog.ShowMessage("some stuff has happened etc etc", "Error", MessageBoxButton.OK, Window.GetWindow(this));
         }
+
+        
 
         private async void GetImages()
         {
@@ -70,27 +80,42 @@ namespace LabelPrinter.App.Pages
             {
                 LabelImages.Clear();
 
-                var labelFromFile = _labelManager?.ParseLabelFromFile(_labelLocation);
+                var labelItem = await _labelManager.ParseLabelFromFile(_labelLocation);
 
-                if (labelFromFile != null)
-                {
+
                     
-                    Dictionary<string, string> _labelItem = await labelFromFile;
+                   // Dictionary<string, string> _labelItem = labelFromFile;
+                    var templates = await _labelTemplateManager.FetchAllLabelTemplates();
 
-                    foreach (var template in _labelTemplateManager.FetchAllLabelTemplates())
+                    if (templates.HasContent())
                     {
-                        var fullLabel = _bitmapGenerator?.GenerateLabel(_labelItem, template);
+                        foreach (var template in templates)
+                        {
+                            var fullLabel = _bitmapGenerator.GenerateLabel(labelItem, template);
+                        
+                                LabelImages.Add(new DisplayLabel
+                                {
+                                    Bitmap = fullLabel.Bitmap,
+                                    Template = fullLabel.Template
+                                });
+                          
+                           //     ModernDialog.ShowMessage(
+                               //     $"An error occurred. The '{template.FriendlyName}' label could not be generated. Check the error log for details.",
+                                //    "Error", MessageBoxButton.OK, Window.GetWindow(this));
 
-                        if(fullLabel != null)
-                            LabelImages.Add(new DisplayLabel { Bitmap = fullLabel.Bitmap, Template = fullLabel.Template});
+                        }
+                    }
+                    else
+                    {
+                        ModernDialog.ShowMessage("An error occurred. The label templates could not be loaded.","Error", MessageBoxButton.OK, Window.GetWindow(this));
                     }
 
 
-                }
+                
             }
             else
             {
-                MessageBox.Show(@"The file path command line 'location' was not found.");
+                ModernDialog.ShowMessage(@"The file path command line 'location' was not found.", "Error", MessageBoxButton.OK, Window.GetWindow(this));
                 //  SPOpenFilePanel.Visibility = Visibility.Visible;
             }
         }
@@ -116,7 +141,7 @@ namespace LabelPrinter.App.Pages
 
             if (string.IsNullOrEmpty(printerString))
             {
-                MessageBox.Show("No printer is associated with this label. Please add one in the Edit Labels tab.");
+                ModernDialog.ShowMessage(@"No printer is associated with this label. Please add one in the Edit Labels tab.", "Error", MessageBoxButton.OK, Window.GetWindow(this));
             }
             else
             {
@@ -124,7 +149,7 @@ namespace LabelPrinter.App.Pages
 
                 if (selectedDisplayLabel == null)
                 {
-                    MessageBox.Show("An error occurred. The requested label could not be printer.");
+                    ModernDialog.ShowMessage(@"An error occurred. The requested label could not be printer.", "Error", MessageBoxButton.OK, Window.GetWindow(this));
                     return;
                 }
 
@@ -150,7 +175,7 @@ namespace LabelPrinter.App.Pages
         {
             if (!LabelImages.HasContent())
             {
-                MessageBox.Show("An error occurred. The labels could not be printed.");
+                ModernDialog.ShowMessage(@"An error occurred. The labels could not be printed.", "Error", MessageBoxButton.OK, Window.GetWindow(this));
             }
             else
             {

@@ -9,35 +9,45 @@ using LabelGenerator.Interfaces;
 using LabelGenerator.Objects.BitmapGenerator;
 using LabelGenerator.Objects.Extensions;
 using LabelGenerator.Objects.LabelConfig;
+using NLog;
 using Type = LabelGenerator.Objects.LabelConfig.Type;
 
 namespace LabelGenerator
 {
     public class BitmapGenerator : IBitmapGenerator
     {
+        private ILogger Log { get; set; }
+
         public BitmapGenerator()
         {
-            
+            Log = LogManager.GetCurrentClassLogger();
         }
+
+        public IFileManager FileManager { get; set; }
 
         public LabelBitmap GenerateLabel(Dictionary<string, string> label, LabelTemplate labelTemplate)
         {
-            return GenerateBitmapFromLabelTemplate(labelTemplate, label);
+            try
+            {
+                return GenerateBitmapFromLabelTemplate(labelTemplate, label);
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex);
+                return null;
+            } 
         }
 
         private LabelBitmap GenerateBitmapFromLabelTemplate(LabelTemplate label, Dictionary<string, string> labelContent)
         {
-     //       Rectangle resolution = Screen.PrimaryScreen.Bounds;
-
-
             if (label != null)
             {
                 var imageSize = new Point(label.Width, label.Height);
                 using (var labelImage = new Bitmap(imageSize.X, imageSize.Y))
                 using (var graphics = Graphics.FromImage(labelImage))
                 {
-                   // labelImage.SetResolution(8, 8);
-                    
+                    labelImage.SetResolution(300, 300);
+
                     var fontCollection = new PrivateFontCollection();
 
                     var customFonts = label.Fonts.Where(n => n.Custom).Select(n => n.Location).Distinct();
@@ -46,7 +56,18 @@ namespace LabelGenerator
                     {
                         foreach (var font in customFonts)
                         {
-                            fontCollection.AddFontFile($@"{AppDomain.CurrentDomain.BaseDirectory}\Fonts\{font}");
+                            var file = $@"{AppDomain.CurrentDomain.BaseDirectory}\Fonts\{font}";
+
+                            try
+                            {
+                                fontCollection.AddFontFile(file);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Fatal($"The custom font '{file}' could not be found.");
+                                return null;
+                            }
+
                         }
                     }
 
@@ -59,12 +80,12 @@ namespace LabelGenerator
                         else
                             fontDict.Add(font.Name, new Font(font.FontFamily, font.Size, font.Style));
                     }
-                    
+
                     graphics.Clear(Color.White);
                     graphics.CompositingQuality = CompositingQuality.HighQuality;
                     graphics.SmoothingMode = SmoothingMode.HighQuality;
                     graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    graphics.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
+                    graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                     graphics.PageUnit = GraphicsUnit.Pixel;
                     var sb1 = new SolidBrush(Color.Black);
 
@@ -83,13 +104,11 @@ namespace LabelGenerator
                                 case Type.Rectangle:
                                     graphics.DrawRectangle(new Pen(Color.Black), ParseCoord(coord: line.X), ParseCoord(coord: line.Y), line.Width, line.Height);
                                     break;
-                                default:
-                                    break;
                             }
                         }
                     }
 
-                    return new LabelBitmap {Bitmap = new Bitmap(labelImage), Template = label };
+                    return new LabelBitmap { Bitmap = new Bitmap(labelImage), Template = label };
 
                 }
             }
@@ -118,9 +137,12 @@ namespace LabelGenerator
             if (string.IsNullOrEmpty(coord))
                 return 0;
 
-            if (coord.ToLower() == "center")
+            if (coord.ToLower() == "centerx")
                 return text.XCenter(graphics, font, size);
 
+            if (coord.ToLower() == "centery")
+                return text.YCenter(graphics, font, size);
+            
             return Convert.ToSingle(coord);
         }
     }

@@ -11,6 +11,13 @@ namespace LabelGenerator.Objects.Extensions
             return (containerWidth - s.Width) / 2;
         }
 
+        public static float YCenter(this string text, Graphics g, Font font, float containerHeight)
+        {
+            var s = g.MeasureString(text, font);
+
+            return (containerHeight - s.Height) / 2;
+        }
+
         /*public static float XCenter(this Image image, float containerWidth)
         {
             return (containerWidth - image.Width) / 2;

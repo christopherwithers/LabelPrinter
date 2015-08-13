@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LabelGenerator.Objects.LabelConfig;
 
 namespace LabelGenerator.Interfaces
 {
     public interface ILabelTemplateManager
     {
-        IEnumerable<LabelTemplate> FetchAllLabelTemplates();
+        Task<IEnumerable<LabelTemplate>> FetchAllLabelTemplates();
 
         bool SaveLabelTemplate(LabelTemplate label);
         bool SaveAllLabelTemplates(IEnumerable<LabelTemplate> labels);

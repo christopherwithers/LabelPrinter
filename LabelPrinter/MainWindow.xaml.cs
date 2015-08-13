@@ -14,9 +14,11 @@ namespace FirstFloor.ModernUI.App
 
         public MainWindow()
         {
+            
+
             InitializeComponent();
 
-
+            
         }
 
 

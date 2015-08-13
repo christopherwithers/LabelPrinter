@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using Extensions;
+using FirstFloor.ModernUI.Windows.Controls;
 using LabelGenerator.Interfaces;
 
 namespace LabelPrinter.App.Pages
@@ -33,11 +34,11 @@ namespace LabelPrinter.App.Pages
 
         }
 
-        private void GenerateFormItems()
+        private async void GenerateFormItems()
         {
             if (_labels == null)
             {
-                _labels = _labelGenerator.FetchAllLabelTemplates();
+                _labels = await _labelGenerator.FetchAllLabelTemplates();
             }
 
             if (_labels.HasContent())
@@ -78,12 +79,12 @@ namespace LabelPrinter.App.Pages
 
         }
 
-        private void SaveButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
+        private async void SaveButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
             if (_labelGenerator.SaveAllLabelTemplates(_labels))
-                _labels = _labelGenerator.FetchAllLabelTemplates();
+                _labels = await _labelGenerator.FetchAllLabelTemplates();
             else
-                MessageBox.Show("An error occurred, the printer settings could not be saved.");
+                ModernDialog.ShowMessage("An error occurred, the printer settings could not be saved.", "Error", MessageBoxButton.OK, Window.GetWindow(this));
         }
 
         private static ObservableCollection<string> GetInstalledPrinters()

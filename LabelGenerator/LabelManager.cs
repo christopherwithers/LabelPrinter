@@ -37,7 +37,7 @@ namespace LabelGenerator
 
             var success = true;
 
-            var xml = await _fileManager.ReadFile(location);
+            var xml = await _fileManager.ReadXMLFile(location);
 
             try
             {
@@ -98,7 +98,7 @@ namespace LabelGenerator
                 return null;
             }
 
-            var xsdDoc = await _fileManager.ReadFile($@"{AppDomain.CurrentDomain.BaseDirectory}\Config\LabelFile.xsd");
+            var xsdDoc = await _fileManager.ReadXMLFile($@"{AppDomain.CurrentDomain.BaseDirectory}\Config\LabelFile.xsd");
 
 
             if (string.IsNullOrEmpty(xsdDoc))

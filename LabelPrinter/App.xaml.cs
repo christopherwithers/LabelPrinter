@@ -21,13 +21,11 @@ namespace FirstFloor.ModernUI.App
         /// <param name="e">A <see cref="T:System.Windows.StartupEventArgs"/> that contains the event data.</param>
         protected override void OnStartup(StartupEventArgs e)
         {
-            Container.Register<IBitmapGenerator, BitmapGenerator>();
+            Container.Register<IFileManager, FileManager>();
             Container.Register<ILabelTemplateManager, LabelTemplateManager>();
+            Container.Register<IBitmapGenerator, BitmapGenerator>();
             Container.Register<ILabelManager, LabelManager>();
-            Container.Register<IFileManager, FileManager>(new PerContainerLifetime());
-
-
-
+            
 
             base.OnStartup(e);
         }

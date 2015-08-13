@@ -46,7 +46,7 @@ namespace LabelPrinter.Tests
         [Test]
         public async Task SourceLocation_ValidLocationValidXMLFormat_ReturnsTrue()
         {
-            _fileManager.Setup(n => n.ReadFile(It.IsAny<string>())).ReturnsAsync(XmlString);
+            _fileManager.Setup(n => n.ReadXMLFile(It.IsAny<string>())).ReturnsAsync(XmlString);
 
             var result = await _labelManager.SourceLocation(ValidLocation);
 
@@ -56,7 +56,7 @@ namespace LabelPrinter.Tests
         [Test]
         public async Task SourceLocation_ValidLocationInvalidFile_ReturnsFalse()
         {
-            _fileManager.Setup(n => n.ReadFile(It.IsAny<string>())).ReturnsAsync("InvalidXML");
+            _fileManager.Setup(n => n.ReadXMLFile(It.IsAny<string>())).ReturnsAsync("InvalidXML");
 
             var result = await _labelManager.SourceLocation(ValidLocation);
 
@@ -66,7 +66,7 @@ namespace LabelPrinter.Tests
         [Test]
         public async Task SourceLocation_InvalidLocation_ReturnsFalse()
         {
-            _fileManager.Setup(n => n.ReadFile(It.IsAny<string>())).ReturnsAsync(string.Empty);
+            _fileManager.Setup(n => n.ReadXMLFile(It.IsAny<string>())).ReturnsAsync(string.Empty);
 
             var result = await _labelManager.SourceLocation(InvalidLocation);
 
@@ -101,7 +101,7 @@ namespace LabelPrinter.Tests
         [Test]
         public async Task ParseLabelFromFile_InvalidLocation_ReturnsNull()
         {
-            _fileManager.Setup(n => n.ReadFile(It.IsAny<string>())).ReturnsAsync(string.Empty);
+            _fileManager.Setup(n => n.ReadXMLFile(It.IsAny<string>())).ReturnsAsync(string.Empty);
 
             var result = await _labelManager.ParseLabelFromFile(InvalidLocation);
 
@@ -111,7 +111,7 @@ namespace LabelPrinter.Tests
         [Test]
         public async Task ParseLabelFromFile_ValidLocationInvalidXMLGenerated_ReturnsNull()
         {
-            _fileManager.Setup(n => n.ReadFile(It.IsAny<string>())).ReturnsAsync(string.Empty);
+            _fileManager.Setup(n => n.ReadXMLFile(It.IsAny<string>())).ReturnsAsync(string.Empty);
 
             _labelManager.Document = new XmlDocument();
 
@@ -123,7 +123,7 @@ namespace LabelPrinter.Tests
         [Test]
         public async Task ParseLabelFromFile_ValidLocation_ReturnsDictionary()
         {
-            _fileManager.Setup(n => n.ReadFile(It.IsAny<string>())).ReturnsAsync(XmlString);
+            _fileManager.Setup(n => n.ReadXMLFile(It.IsAny<string>())).ReturnsAsync(XmlString);
 
             var result = await _labelManager.ParseLabelFromFile($"{ValidLocation}.xml");
 

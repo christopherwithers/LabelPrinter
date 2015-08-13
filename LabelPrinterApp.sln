@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabelGenerator", "LabelGene
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabelPrinter.App", "LabelPrinter\LabelPrinter.App.csproj", "{BA5911EB-F34B-4F8D-AB29-6B967ED0B8DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabelPrinter.Console", "LabelPrinter.Console\LabelPrinter.Console.csproj", "{51719D7F-06BF-4013-B210-A92CAAAC6A7B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Extensions\Extensions.csproj", "{DCC8596D-2A57-49C8-A18B-A9E8E3DEAD1D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabelPrinter.Tests", "LabelPrinter.Tests\LabelPrinter.Tests.csproj", "{A9ADE02E-F290-407C-84AB-8B908959D64B}"
@@ -27,18 +25,14 @@ Global
 		{BA5911EB-F34B-4F8D-AB29-6B967ED0B8DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA5911EB-F34B-4F8D-AB29-6B967ED0B8DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA5911EB-F34B-4F8D-AB29-6B967ED0B8DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51719D7F-06BF-4013-B210-A92CAAAC6A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51719D7F-06BF-4013-B210-A92CAAAC6A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51719D7F-06BF-4013-B210-A92CAAAC6A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51719D7F-06BF-4013-B210-A92CAAAC6A7B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DCC8596D-2A57-49C8-A18B-A9E8E3DEAD1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DCC8596D-2A57-49C8-A18B-A9E8E3DEAD1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCC8596D-2A57-49C8-A18B-A9E8E3DEAD1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCC8596D-2A57-49C8-A18B-A9E8E3DEAD1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCC8596D-2A57-49C8-A18B-A9E8E3DEAD1D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{A9ADE02E-F290-407C-84AB-8B908959D64B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A9ADE02E-F290-407C-84AB-8B908959D64B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9ADE02E-F290-407C-84AB-8B908959D64B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9ADE02E-F290-407C-84AB-8B908959D64B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9ADE02E-F290-407C-84AB-8B908959D64B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
