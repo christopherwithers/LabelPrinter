@@ -69,7 +69,6 @@ namespace LabelPrinter.App.Pages
 
             }
             
-         //   ModernDialog.ShowMessage("some stuff has happened etc etc", "Error", MessageBoxButton.OK, Window.GetWindow(this));
         }
 
         
@@ -82,9 +81,6 @@ namespace LabelPrinter.App.Pages
 
                 var labelItem = await _labelManager.ParseLabelFromFile(_labelLocation);
 
-
-                    
-                   // Dictionary<string, string> _labelItem = labelFromFile;
                     var templates = await _labelTemplateManager.FetchAllLabelTemplates();
 
                     if (templates.HasContent())
@@ -92,16 +88,15 @@ namespace LabelPrinter.App.Pages
                         foreach (var template in templates)
                         {
                             var fullLabel = _bitmapGenerator.GenerateLabel(labelItem, template);
-                        
+
+                            if (fullLabel != null)
+                            {
                                 LabelImages.Add(new DisplayLabel
                                 {
                                     Bitmap = fullLabel.Bitmap,
                                     Template = fullLabel.Template
                                 });
-                          
-                           //     ModernDialog.ShowMessage(
-                               //     $"An error occurred. The '{template.FriendlyName}' label could not be generated. Check the error log for details.",
-                                //    "Error", MessageBoxButton.OK, Window.GetWindow(this));
+                            }
 
                         }
                     }
@@ -116,7 +111,7 @@ namespace LabelPrinter.App.Pages
             else
             {
                 ModernDialog.ShowMessage(@"The file path command line 'location' was not found.", "Error", MessageBoxButton.OK, Window.GetWindow(this));
-                //  SPOpenFilePanel.Visibility = Visibility.Visible;
+                spPrintAll.Visibility = Visibility.Hidden;
             }
         }
 

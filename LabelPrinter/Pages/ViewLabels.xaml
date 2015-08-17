@@ -13,7 +13,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical" Grid.Row="0">
+        <StackPanel Orientation="Vertical" Grid.Row="0" Name="spPrintAll">
         <TextBlock Text="Print Labels" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
         
 
